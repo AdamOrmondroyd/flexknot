@@ -44,13 +44,13 @@ def get_theta_n(theta):
     return theta_n
 
 
-def super_model(x, theta):
+def adaptive_linf(x, theta):
     """
-    Super model which allows the number of parameters being used to vary.
+    Adaptive linf which allows the number of parameters being used to vary.
 
-    The first element of params is n, the number of interior nodes used in
+    The first element of params is n; ceil(n) is number of interior nodes used in
     the linear interpolation model. This is then used to select the
-    appropriate other elements of params to pass to f_end_nodes()
+    appropriate other elements of params to pass to linf()
 
     theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
     where N is the greatest allowed value of ceil(n).
