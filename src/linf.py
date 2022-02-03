@@ -9,9 +9,8 @@ where N is the greatest allowed value of ceil(n).
 """
 import numpy as np
 
-wavelength = (
-    1.0  # temporary while I think about how I'm going to deal with the boundaries.
-)
+# temporary while I think about how I'm going to deal with the boundaries.
+wavelength = 1.0
 
 
 def linf(x, theta):
