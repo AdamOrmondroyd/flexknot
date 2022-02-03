@@ -5,7 +5,7 @@ The tricky part here is going to be working out how the "wavelength" (and equiva
 
 theta refers to the full set of parameters for an adaptive linear interpolation model,
 [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
-where N is the greatest value that n is allowed to take.
+where N is the greatest allowed value of ceil(n).
 """
 import numpy as np
 
@@ -52,8 +52,8 @@ def super_model(x, theta):
     the linear interpolation model. This is then used to select the
     appropriate other elements of params to pass to f_end_nodes()
 
-    params = [n, [θ1], [θ2], ..., [θN], y0, y_N+1], since the end points can
-    be shared between the models with varying n (I think)
+    theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
+    where N is the greatest allowed value of ceil(n).
     """
     theta_n = get_theta_n(theta)
     return linf(x, theta_n)
