@@ -5,7 +5,6 @@ I think by making a start on writing/copying this over from toy_sine it should b
 proceed with specifying the boundaries.
 """
 
-from curses import has_colors
 import numpy as np
 from scipy.special import erf, logsumexp
 from linf import adaptive_linf, get_theta_n, linf
