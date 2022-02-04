@@ -9,8 +9,9 @@ def test_linf():
     x_min = 0
     x_max = 1
     N = 8
-    x_nodes = np.sort(np.random.uniform(x_min, x_max, N))
-    y_nodes = np.random.uniform(-10, 10, N + 2)
+    rng = np.random.default_rng()
+    x_nodes = np.sort(rng.uniform(x_min, x_max, N))
+    y_nodes = rng.uniform(-10, 10, N + 2)
     theta = np.zeros(len(x_nodes) + len(y_nodes))
     theta[1 : 2 * N + 1 : 2] = x_nodes
     theta[0 : 2 * N + 2 : 2] = y_nodes[:-1]
