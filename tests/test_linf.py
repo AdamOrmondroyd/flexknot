@@ -1,5 +1,5 @@
 import numpy as np
-from linf.linf import linf
+from linf.linfs import linf
 
 
 def test_linf():
