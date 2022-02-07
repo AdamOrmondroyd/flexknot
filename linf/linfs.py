@@ -20,7 +20,7 @@ def get_linf(x_min, x_max):
     Returns:
     linf(x, theta)
 
-    theta in format  [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
+    theta in format [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
     """
 
     def linf_function(x, theta):
@@ -94,3 +94,16 @@ def get_adaptive_linf(x_min, x_max):
         return linf_function(x, get_theta_n(theta))
 
     return adaptive_linf_function
+
+
+def create_theta(x_nodes, y_nodes):
+    """
+    Takes x_nodes = [x1, ... x_n] and y_nodes = [y0, y1, ..., yn, y(n+1)] to
+    return theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1]
+    """
+    n = len(x_nodes)
+    theta = np.zeros(len(x_nodes) + len(y_nodes))
+    theta[1 : 2 * n + 1 : 2] = x_nodes
+    theta[0 : 2 * n + 2 : 2] = y_nodes[:-1]
+    theta[-1] = y_nodes[-1]
+    return theta
