@@ -10,7 +10,7 @@ where N is the greatest allowed value of ceil(n).
 import numpy as np
 
 
-def linf(x_min, x_max):
+def get_linf(x_min, x_max):
     """
     Returns a linf, with end nodes at x_min and x_max.
 
@@ -61,7 +61,7 @@ def get_theta_n(theta):
     return theta_n
 
 
-def adaptive_linf(x_min, x_max):
+def get_adaptive_linf(x_min, x_max):
     """
     Adaptive linf which allows the number of parameters being used to vary.
 
@@ -77,7 +77,7 @@ def adaptive_linf(x_min, x_max):
     theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
     where N is the greatest allowed value of ceil(n).
     """
-    linf_function = linf(x_min, x_max)
+    linf_function = get_linf(x_min, x_max)
 
     def adaptive_linf_function(x, theta):
         """

@@ -1,5 +1,5 @@
 import numpy as np
-from linf.linfs import linf
+from linf.linfs import get_linf
 
 
 def test_linf():
@@ -19,5 +19,5 @@ def test_linf():
     xs = np.linspace(x_min, x_max, 100)
     assert np.all(
         np.interp(xs, np.concatenate(([x_min], x_nodes, [x_max])), y_nodes)
-        == linf(x_min, x_max)(xs, theta)
+        == get_linf(x_min, x_max)(xs, theta)
     )

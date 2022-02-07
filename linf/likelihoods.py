@@ -7,7 +7,7 @@ proceed with specifying the boundaries.
 
 import numpy as np
 from scipy.special import erf, logsumexp
-from linfs import adaptive_linf, get_theta_n, linf
+from linfs import get_adaptive_linf, get_theta_n, get_linf
 
 
 def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
@@ -82,9 +82,9 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
         var_y = sigma**2
 
         if adaptive:
-            f = adaptive_linf(x_min, x_max)
+            f = get_adaptive_linf(x_min, x_max)
         else:
-            f = linf(x_min, x_max)
+            f = get_linf(x_min, x_max)
 
         def y_errors_likelihood(theta):
             if hasattr(var_y, "__len__"):
