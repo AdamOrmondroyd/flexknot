@@ -1,5 +1,5 @@
 import numpy as np
-from src.linf import linf, adaptive_linf
+from linf.linf import linf, adaptive_linf
 
 
 def test_adaptive_linf():
