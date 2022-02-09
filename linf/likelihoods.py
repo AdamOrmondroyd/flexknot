@@ -7,7 +7,7 @@ proceed with specifying the boundaries.
 
 import numpy as np
 from scipy.special import erf, logsumexp
-from linfs import get_adaptive_linf, get_theta_n, get_linf
+from linf.linfs import get_adaptive_linf, get_theta_n, get_linf
 
 
 def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
