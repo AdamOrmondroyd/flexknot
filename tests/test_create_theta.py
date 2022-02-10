@@ -1,6 +1,7 @@
 import numpy as np
 from linf.helper_functions import (
     create_theta,
+    get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
 )
@@ -8,6 +9,16 @@ from linf.helper_functions import (
 x_nodes = np.array([0.25, 0.75])
 y_nodes = np.array([0, 1, -1, 2])
 theta = np.array([0, 0.25, 1, 0.75, -1, 2])
+
+
+def test_get_theta_n():
+    """
+    Check that get_theta_n() extracts the correct elements from [3, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6].
+    """
+
+    theta = np.array([3, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6])
+    theta_n = get_theta_n(theta)
+    assert np.all(np.array([0, 1, 1, 2, 2, 3, 3, 6]) == theta_n)
 
 
 def test_create_theta():
