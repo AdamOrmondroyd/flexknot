@@ -1,5 +1,5 @@
 import numpy as np
-from linf.linfs import get_theta_n
+from linf.helper_functions import get_theta_n
 
 
 def test_get_theta_n():
