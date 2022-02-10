@@ -12,10 +12,15 @@ from linf.linfs import get_adaptive_linf, get_theta_n, get_linf
 
 def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
     """
+    Creates a likelihood for a linear interpolation function, relative to data described
+    by xs, ys, and sigma.
+
     sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]]
 
     (obviously the middle two are degenerate when len(sigma) = 2, in which case
     [sigma_x, sigma_y] is assumed.)
+
+    Returns likelihood(theta) -> log(L), [] where [] is the (lack of) derived parameters.
     """
     LOG_2_SQRT_2PIλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
 
