@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.special import erf
 from linf import get_likelihood
-from linf.linfs import create_theta
+from linf.helper_functions import create_theta
 
 # TODO: add test for just y errors case
 def test_likelihood():
