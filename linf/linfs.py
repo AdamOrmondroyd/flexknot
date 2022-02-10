@@ -1,11 +1,11 @@
 """
 Linear INterpolation Functions.
 
-The tricky part here is going to be working out how the "wavelength" (and equivalently 0) should be provided.
-
 theta refers to the full set of parameters for an adaptive linear interpolation model,
 [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
 where N is the greatest allowed value of ceil(n).
+
+The reason for the interleaving of x and y is it avoids the need to know N.
 """
 import numpy as np
 
@@ -90,7 +90,6 @@ def get_adaptive_linf(x_min, x_max):
         theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
         where N is the greatest allowed value of ceil(n).
         """
-        theta_n = get_theta_n(theta)
         return linf_function(x, get_theta_n(theta))
 
     return adaptive_linf_function

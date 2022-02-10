@@ -1,5 +1,5 @@
 """
-Likelihoods using linfs. 
+Likelihoods using linfs.
 
 I think by making a start on writing/copying this over from toy_sine it should become clear how to
 proceed with specifying the boundaries.
@@ -22,7 +22,8 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
 
     Returns likelihood(theta) -> log(L), [] where [] is the (lack of) derived parameters.
     """
-    LOG_2_SQRT_2PIλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
+
+    LOG_2_SQRT_2πλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
 
     # ## is sorting actually necessary? Will test in toy sine
     # xs_sorted_index = np.argsort(xs)
@@ -61,7 +62,7 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
             t_minus = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T * (x_nodes[:-1] - beta)
             t_plus = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T * (x_nodes[1:] - beta)
 
-            logL = -len(xs) * LOG_2_SQRT_2PIλ
+            logL = -len(xs) * LOG_2_SQRT_2πλ
             logL += np.sum(
                 np.log(
                     np.sum(
@@ -82,25 +83,24 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
 
             return super_likelihood
 
+        return xy_errors_likelihood
+
+    # sigma_y only
+
+    var_y = sigma**2
+
+    if adaptive:
+        f = get_adaptive_linf(x_min, x_max)
+    else:
+        f = get_linf(x_min, x_max)
+
+    def y_errors_likelihood(theta):
+        if hasattr(var_y, "__len__"):
+            logL = -0.5 * np.sum(np.log(2 * np.pi * var_y))
         else:
-            return xy_errors_likelihood
+            logL = -0.5 * len(ys) * np.log(2 * np.pi * var_y)
 
-    else:  # sigma_y only
+        logL += np.sum(-((ys - f(xs, theta)) ** 2) / 2 / var_y)
+        return logL, []
 
-        var_y = sigma**2
-
-        if adaptive:
-            f = get_adaptive_linf(x_min, x_max)
-        else:
-            f = get_linf(x_min, x_max)
-
-        def y_errors_likelihood(theta):
-            if hasattr(var_y, "__len__"):
-                logL = -0.5 * np.sum(np.log(2 * np.pi * var_y))
-            else:
-                logL = -0.5 * len(ys) * np.log(2 * np.pi * var_y)
-
-            logL += np.sum(-((ys - f(xs, theta)) ** 2) / 2 / var_y)
-            return logL, []
-
-        return y_errors_likelihood
+    return y_errors_likelihood
