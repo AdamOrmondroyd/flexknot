@@ -1,9 +1,12 @@
+"""
+Test get_likelihood in two trivial cases simple enough to work out by hand.
+"""
 import numpy as np
 from scipy.special import erf
 from linf import get_likelihood
 from linf.helper_functions import create_theta
 
-# TODO: add test for just y errors case
+
 def test_likelihood():
     """
     Test the likelihood function against a trivial case with just sigma_y.

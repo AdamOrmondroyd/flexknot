@@ -1,3 +1,7 @@
+"""
+Test each of the functions from helper_functions.py
+"""
+
 import numpy as np
 from linf.helper_functions import (
     create_theta,
@@ -22,12 +26,21 @@ def test_get_theta_n():
 
 
 def test_create_theta():
+    """
+    Test that create_theta() combines x_nodes and y_nodes correctly.
+    """
     assert np.all(create_theta(x_nodes, y_nodes) == theta)
 
 
 def test_get_x_nodes_from_theta():
+    """
+    Test that get_x_nodes_from_theta() extracts the x_nodes correcly.
+    """
     assert np.all(x_nodes == get_x_nodes_from_theta(theta))
 
 
 def test_get_y_nodes_from_theta():
+    """
+    Test that get_y_nodes_from_theta() extracts the y_nodes correctly.
+    """
     assert np.all(y_nodes == get_y_nodes_from_theta(theta))

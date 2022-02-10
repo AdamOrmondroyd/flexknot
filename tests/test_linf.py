@@ -1,10 +1,14 @@
+"""
+Test that linf returns the same results as np.interp.
+"""
+
 import numpy as np
 from linf.linfs import get_linf
 
 
 def test_linf():
     """
-    Test that linf gives the same results as np.interp
+    Test that linf gives the same results as np.interp.
     """
     x_min = 0
     x_max = 1
