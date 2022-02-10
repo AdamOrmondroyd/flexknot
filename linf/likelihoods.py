@@ -12,7 +12,7 @@ from linf.linfs import get_adaptive_linf, get_theta_n, get_linf
 
 def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
     """
-    sigma is either sigma_y, [sigma_x, sigma_y], [[sigma_ys]] or [[sigma_xs], [sigma_ys]]
+    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]]
 
     (obviously the middle two are degenerate if there is only one data point, in which case
     [sigma_x, sigma_y] is assumed.)
