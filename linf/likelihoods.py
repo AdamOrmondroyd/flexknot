@@ -6,7 +6,7 @@ proceed with specifying the boundaries.
 """
 
 import numpy as np
-from scipy.special import erf, logsumexp
+from scipy.special import erf
 from linf.linfs import get_adaptive_linf, get_theta_n, get_linf
 
 
@@ -14,21 +14,21 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
     """
     sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]]
 
-    (obviously the middle two are degenerate if there is only one data point, in which case
+    (obviously the middle two are degenerate when len(sigma) = 2, in which case
     [sigma_x, sigma_y] is assumed.)
     """
     LOG_2_SQRT_2PIλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
 
-    ## is sorting actually necessary? Will test in toy sine
-    xs_sorted_index = np.argsort(xs)
-    xs, ys = xs[xs_sorted_index], ys[xs_sorted_index]
+    # ## is sorting actually necessary? Will test in toy sine
+    # xs_sorted_index = np.argsort(xs)
+    # xs, ys = xs[xs_sorted_index], ys[xs_sorted_index]
 
     # check for sigma_x
     has_sigma_x = False
     if hasattr(sigma, "__len__"):
         if len(sigma.shape) == 2:
             has_sigma_x = True
-        if 2 == len(sigma) and len(ys) > 1:
+        if 2 == len(sigma):
             has_sigma_x = True
 
     if has_sigma_x:
@@ -47,7 +47,7 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
             cs = y_nodes[:-1] - ms * x_nodes[:-1]
 
             # save recalculating things
-
+            # indices in order [data point, relevant m and c]
             q = (np.outer(var_x, ms**2).T + var_y).T
             delta = np.subtract.outer(ys, cs)
             beta = (xs * var_x + (delta * ms).T * var_y).T / q
@@ -57,9 +57,12 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
             t_plus = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T * (x_nodes[1:] - beta)
 
             logL = -len(xs) * LOG_2_SQRT_2PIλ
-            logL = np.sum(
-                logsumexp(
-                    -gamma + np.log(q**-0.5 * (erf(t_plus) - erf(t_minus))), axis=-1
+            logL += np.sum(
+                np.log(
+                    np.sum(
+                        np.exp(-gamma) * q**-0.5 * (erf(t_plus) - erf(t_minus)),
+                        axis=-1,
+                    )
                 )
             )
 
