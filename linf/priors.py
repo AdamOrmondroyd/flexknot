@@ -4,11 +4,15 @@ Priors using linfs.
 I need to think carefully how best to abstract away all the weird slicing that
 goes on to make a linf work.
 
-Currently going for n then x_nodes then y_nodes.
+Currently going for n then interleaving x_nodes and y_nodes.
 """
 import numpy as np
 
-from linf.helper_functions import get_x_nodes_from_theta, get_y_nodes_from_theta
+from helper_functions import (
+    create_theta,
+    get_x_nodes_from_theta,
+    get_y_nodes_from_theta,
+)
 from pypolychord.priors import UniformPrior, SortedUniformPrior
 
 
@@ -22,12 +26,13 @@ def get_prior(x_min, x_max, y_min, y_max, N_max=None):
     """
     # non-adaptive prior
     def prior(theta):
-        x_prior = SortedUniformPrior(x_min, x_max)(get_x_nodes_from_theta(theta))
-        y_prior = UniformPrior(y_min, y_max)(get_y_nodes_from_theta(theta))
-
         # TODO: how best to combine the priors? Interleave or separate?
         # for now we're going with separate
-        return np.concatenate((x_prior, y_prior))
+        # and now I've decided to go back to interleaving
+        return create_theta(
+            SortedUniformPrior(x_min, x_max)(get_x_nodes_from_theta(theta)),
+            UniformPrior(y_min, y_max)(get_y_nodes_from_theta(theta)),
+        )
 
     if N_max is None:
 
@@ -38,3 +43,9 @@ def get_prior(x_min, x_max, y_min, y_max, N_max=None):
         return np.concatenate((n_prior, prior(theta[1:])))
 
     return adaptive_prior
+
+
+if __name__ == "__main__":
+    theta = np.arange(10)
+    prior = get_prior(0, 10, 0, 10)
+    prior(theta)
