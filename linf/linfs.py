@@ -9,7 +9,11 @@ The reason for the interleaving of x and y is it avoids the need to know N.
 """
 import numpy as np
 
-from linf.helper_functions import get_theta_n
+from linf.helper_functions import (
+    get_theta_n,
+    get_x_nodes_from_theta,
+    get_y_nodes_from_theta,
+)
 
 
 def get_linf(x_min, x_max):
@@ -36,8 +40,8 @@ def get_linf(x_min, x_max):
         n = len(theta) // 2 - 1
         return np.interp(
             x,
-            np.concatenate(([x_min], theta[1 : 2 * n + 1 : 2], [x_max])),
-            np.concatenate((theta[0 : 2 * n + 2 : 2], theta[-1:])),
+            np.concatenate(([x_min], get_x_nodes_from_theta(theta), [x_max])),
+            get_y_nodes_from_theta(theta),
         )
 
     return linf_function

@@ -7,6 +7,7 @@ proceed with specifying the boundaries.
 
 import numpy as np
 from scipy.special import erf
+from linf.helper_functions import get_x_nodes_from_theta, get_y_nodes_from_theta
 from linf.linfs import get_adaptive_linf, get_theta_n, get_linf
 
 
@@ -46,8 +47,8 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
 
         def xy_errors_likelihood(theta):
             n = len(theta) // 2 - 1
-            x_nodes = np.concatenate(([x_min], theta[1 : 2 * n + 1 : 2], [x_max]))
-            y_nodes = np.concatenate((theta[0 : 2 * n + 2 : 2], theta[-1:]))
+            x_nodes = np.concatenate(([x_min], get_x_nodes_from_theta(theta), [x_max]))
+            y_nodes = get_y_nodes_from_theta(theta)
 
             ms = (y_nodes[1:] - y_nodes[:-1]) / (x_nodes[1:] - x_nodes[:-1])
             cs = y_nodes[:-1] - ms * x_nodes[:-1]
