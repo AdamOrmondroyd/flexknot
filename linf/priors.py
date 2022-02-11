@@ -5,9 +5,6 @@ I need to think carefully how best to abstract away all the weird slicing that
 goes on to make a linf work.
 
 Currently going for n then x_nodes then y_nodes.
-
-Contains UnformPrior, SortedUniformPrior and forced_identifiability_transform()
-which are blatantly stolen from Will Handley's PolyChord
 """
 import numpy as np
 
