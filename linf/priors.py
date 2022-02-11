@@ -43,9 +43,3 @@ def get_prior(x_min, x_max, y_min, y_max, N_max=None):
         return np.concatenate((n_prior, prior(theta[1:])))
 
     return adaptive_prior
-
-
-if __name__ == "__main__":
-    theta = np.arange(10)
-    prior = get_prior(0, 10, 0, 10)
-    prior(theta)
