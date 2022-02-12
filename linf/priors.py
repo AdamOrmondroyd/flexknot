@@ -58,6 +58,8 @@ class AdaptiveLinfPrior(LinfPrior):
         where n_max is the greatest allowed value of ceil(n).
         """
         return np.concatenate(
-            UniformPrior(0, self.n_max)(theta[0:1]),
-            super().__call__(theta[1:]),
+            (
+                UniformPrior(0, self.n_max)(theta[0:1]),
+                super().__call__(theta[1:]),
+            )
         )
