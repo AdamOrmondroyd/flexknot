@@ -40,15 +40,14 @@ def test_likelihood_sigma_x():
     The value for the likelihood in this case should be ln[(1/16π)(erf(1)-erf(0))(erf(0)-erf(-1))].
     """
 
+    x_min, x_max = 0, 1
+    x_nodes = np.array([])
+    y_nodes = np.array([0, 1])
+    theta = create_theta(x_nodes, y_nodes)
 
-x_min, x_max = 0, 1
-x_nodes = np.array([])
-y_nodes = np.array([0, 1])
-theta = create_theta(x_nodes, y_nodes)
+    x_data = np.array([0, 1])
+    y_data = np.array([0, 1])
+    sigma = np.array([1, 1])
 
-x_data = np.array([0, 1])
-y_data = np.array([0, 1])
-sigma = np.array([1, 1])
-
-l = LinfLikelihood(x_min, x_max, x_data, y_data, sigma, adaptive=False)
-assert l(theta)[0] == np.log((erf(1) - erf(0)) * (erf(0) - erf(-1)) / (16 * np.pi))
+    l = LinfLikelihood(x_min, x_max, x_data, y_data, sigma, adaptive=False)
+    assert l(theta)[0] == np.log((erf(1) - erf(0)) * (erf(0) - erf(-1)) / (16 * np.pi))
