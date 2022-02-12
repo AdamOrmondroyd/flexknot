@@ -4,12 +4,12 @@ Likelihoods using linfs.
 
 import numpy as np
 from scipy.special import erf
-from src.helper_functions import (
+from linf.helper_functions import (
     get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
 )
-from src.linfs import AdaptiveLinf, Linf, get_theta_n
+from linf.linfs import AdaptiveLinf, Linf, get_theta_n
 
 
 class LinfLikelihood:

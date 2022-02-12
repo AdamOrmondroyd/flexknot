@@ -8,7 +8,7 @@ Currently going for n then interleaving x_nodes and y_nodes.
 """
 import numpy as np
 
-from helper_functions import (
+from linf.helper_functions import (
     create_theta,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,

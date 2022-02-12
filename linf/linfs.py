@@ -9,7 +9,7 @@ The reason for the interleaving of x and y is it avoids the need to know N.
 """
 import numpy as np
 
-from src.helper_functions import (
+from linf.helper_functions import (
     get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
