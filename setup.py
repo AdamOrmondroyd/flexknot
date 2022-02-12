@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Ormorod/linf",
-    packages=setuptools.find_packages(),
+    packages=["linf"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Licence :: TODO",
