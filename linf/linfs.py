@@ -30,21 +30,19 @@ class Linf:
     """
 
     def __init__(self, x_min, x_max):
-        self._x_min = x_min
-        self._x_max = x_max
+        self.x_min = x_min
+        self.x_max = x_max
 
     def __call__(self, x, theta):
         """
-        theta in format  [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
+        theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
 
         y0 and yn+1 are the y values corresponding to x_min and x_max respecively.
         """
 
         return np.interp(
             x,
-            np.concatenate(
-                ([self._x_min], get_x_nodes_from_theta(theta), [self._x_max])
-            ),
+            np.concatenate(([self.x_min], get_x_nodes_from_theta(theta), [self.x_max])),
             get_y_nodes_from_theta(theta),
         )
 
