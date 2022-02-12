@@ -16,30 +16,48 @@ from helper_functions import (
 from pypolychord.priors import UniformPrior, SortedUniformPrior
 
 
-def get_prior(x_min, x_max, y_min, y_max, N_max=None):
+class LinfPrior:
     """
-    Returns a uniform + sorted uniform prior appropriate for a linf.
-
-    N_max = int is the maximum number of nodes to use with an adaptive linf.
-
-    N_max=None will return the prior for a non-adaptive model.
+    Interleaved uniform and sorted uniform priors appropriate for a linf.
     """
-    # non-adaptive prior
-    def prior(theta):
-        # TODO: how best to combine the priors? Interleave or separate?
-        # for now we're going with separate
-        # and now I've decided to go back to interleaving
+
+    def __init__(self, x_min, x_max, y_min, y_max):
+        self.x_min = x_min
+        self.x_max = x_max
+        self.y_min = y_min
+        self.y_max = y_max
+
+    def __call__(self, theta):
+        """
+        Prior for linf.
+
+        theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
+        """
         return create_theta(
-            SortedUniformPrior(x_min, x_max)(get_x_nodes_from_theta(theta)),
-            UniformPrior(y_min, y_max)(get_y_nodes_from_theta(theta)),
+            SortedUniformPrior(self.x_min, self.x_max)(get_x_nodes_from_theta(theta)),
+            UniformPrior(self.y_min, self.y_max)(get_y_nodes_from_theta(theta)),
         )
 
-    if N_max is None:
 
-        return prior
+class AdaptiveLinfPrior(LinfPrior):
+    """
+    Interleaved uniform and sorted uniform priors appropriate for a linf.
 
-    def adaptive_prior(theta):
-        n_prior = UniformPrior(0, N_max)(theta[0:1])
-        return np.concatenate((n_prior, prior(theta[1:])))
+    n_max: int is the maximum number of nodes to use with an interactive linf.
+    """
 
-    return adaptive_prior
+    def __init__(self, x_min, x_max, y_min, y_max, n_max):
+        self.n_max = n_max
+        super().__init__(x_min, x_max, y_min, y_max)
+
+    def __call__(self, theta):
+        """
+        Prior for adaptive linf.
+
+        theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_(n_max+1)],
+        where n_max is the greatest allowed value of ceil(n).
+        """
+        return np.concatenate(
+            UniformPrior(0, self.n_max)(theta[0:1]),
+            super().__call__(theta[1:]),
+        )

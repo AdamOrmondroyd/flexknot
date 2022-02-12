@@ -3,7 +3,7 @@ Test get_likelihood in two trivial cases simple enough to work out by hand.
 """
 import numpy as np
 from scipy.special import erf
-from linf import get_likelihood
+from linf import LinfLikelihood
 from linf.helper_functions import create_theta
 
 
@@ -25,7 +25,7 @@ def test_likelihood():
     y_data = np.array([0, 1])
     sigma = 1
 
-    l = get_likelihood(x_min, x_max, x_data, y_data, sigma, adaptive=False)
+    l = LinfLikelihood(x_min, x_max, x_data, y_data, sigma, adaptive=False)
     assert l(theta)[0] == -np.log(2 * np.pi)
 
 
@@ -39,6 +39,7 @@ def test_likelihood_sigma_x():
 
     The value for the likelihood in this case should be ln[(1/16π)(erf(1)-erf(0))(erf(0)-erf(-1))].
     """
+
     x_min, x_max = 0, 1
     x_nodes = np.array([])
     y_nodes = np.array([0, 1])
@@ -48,5 +49,5 @@ def test_likelihood_sigma_x():
     y_data = np.array([0, 1])
     sigma = np.array([1, 1])
 
-    l = get_likelihood(x_min, x_max, x_data, y_data, sigma, adaptive=False)
+    l = LinfLikelihood(x_min, x_max, x_data, y_data, sigma, adaptive=False)
     assert l(theta)[0] == np.log((erf(1) - erf(0)) * (erf(0) - erf(-1)) / (16 * np.pi))
