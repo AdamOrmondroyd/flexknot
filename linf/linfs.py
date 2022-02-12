@@ -37,7 +37,6 @@ def get_linf(x_min, x_max):
 
         y0 and yn+1 are the y values corresponding to x_min and x_max respecively.
         """
-        n = len(theta) // 2 - 1
         return np.interp(
             x,
             np.concatenate(([x_min], get_x_nodes_from_theta(theta), [x_max])),
