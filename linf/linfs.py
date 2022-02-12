@@ -16,9 +16,9 @@ from linf.helper_functions import (
 )
 
 
-def get_linf(x_min, x_max):
+class Linf:
     """
-    Returns a linf, with end nodes at x_min and x_max.
+    linf with end nodes at x_min and x_max.
 
     x_min: float
     x_max: float > x_min
@@ -29,25 +29,27 @@ def get_linf(x_min, x_max):
     theta in format [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
     """
 
-    def linf_function(x, theta):
-        """
-        Vectorised linf using n nodes.
+    def __init__(self, x_min, x_max):
+        self._x_min = x_min
+        self._x_max = x_max
 
+    def __call__(self, x, theta):
+        """
         theta in format  [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
 
         y0 and yn+1 are the y values corresponding to x_min and x_max respecively.
         """
-        n = len(theta) // 2 - 1
+
         return np.interp(
             x,
-            np.concatenate(([x_min], get_x_nodes_from_theta(theta), [x_max])),
+            np.concatenate(
+                ([self._x_min], get_x_nodes_from_theta(theta), [self._x_max])
+            ),
             get_y_nodes_from_theta(theta),
         )
 
-    return linf_function
 
-
-def get_adaptive_linf(x_min, x_max):
+class AdaptiveLinf(Linf):
     """
     Adaptive linf which allows the number of parameters being used to vary.
 
@@ -63,12 +65,9 @@ def get_adaptive_linf(x_min, x_max):
     theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
     where N is the greatest allowed value of ceil(n).
     """
-    linf_function = get_linf(x_min, x_max)
 
-    def adaptive_linf_function(x, theta):
+    def __call__(self, x, theta):
         """
-        Adaptive linf which allows the number of parameters being used to vary.
-
         The first element of theta is n; ceil(n) is number of interior nodes used in
         the linear interpolation model. This is then used to select the
         appropriate other elements of params to pass to linf()
@@ -76,6 +75,4 @@ def get_adaptive_linf(x_min, x_max):
         theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
         where N is the greatest allowed value of ceil(n).
         """
-        return linf_function(x, get_theta_n(theta))
-
-    return adaptive_linf_function
+        return super().__call__(x, get_theta_n(theta))

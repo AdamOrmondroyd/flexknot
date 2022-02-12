@@ -7,8 +7,12 @@ proceed with specifying the boundaries.
 
 import numpy as np
 from scipy.special import erf
-from linf.helper_functions import get_x_nodes_from_theta, get_y_nodes_from_theta
-from linf.linfs import get_adaptive_linf, get_theta_n, get_linf
+from linf.helper_functions import (
+    get_theta_n,
+    get_x_nodes_from_theta,
+    get_y_nodes_from_theta,
+)
+from linf.linfs import AdaptiveLinf, Linf, get_theta_n
 
 
 def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
@@ -91,9 +95,9 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
     var_y = sigma**2
 
     if adaptive:
-        f = get_adaptive_linf(x_min, x_max)
+        linf = AdaptiveLinf(x_min, x_max)
     else:
-        f = get_linf(x_min, x_max)
+        linf = Linf(x_min, x_max)
 
     def y_errors_likelihood(theta):
         if hasattr(var_y, "__len__"):
@@ -101,7 +105,7 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
         else:
             logL = -0.5 * len(ys) * np.log(2 * np.pi * var_y)
 
-        logL += np.sum(-((ys - f(xs, theta)) ** 2) / 2 / var_y)
+        logL += np.sum(-((ys - linf(xs, theta)) ** 2) / 2 / var_y)
         return logL, []
 
     return y_errors_likelihood
