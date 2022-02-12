@@ -9,7 +9,7 @@ The reason for the interleaving of x and y is it avoids the need to know N.
 """
 import numpy as np
 
-from linf.helper_functions import (
+from src.helper_functions import (
     get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
@@ -39,7 +39,6 @@ class Linf:
 
         y0 and yn+1 are the y values corresponding to x_min and x_max respecively.
         """
-
         return np.interp(
             x,
             np.concatenate(([self.x_min], get_x_nodes_from_theta(theta), [self.x_max])),

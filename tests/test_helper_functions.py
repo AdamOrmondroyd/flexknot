@@ -3,7 +3,7 @@ Test each of the functions from helper_functions.py
 """
 
 import numpy as np
-from linf.helper_functions import (
+from src.helper_functions import (
     create_theta,
     get_theta_n,
     get_x_nodes_from_theta,

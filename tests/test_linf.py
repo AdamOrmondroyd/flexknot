@@ -4,7 +4,7 @@ adaptive_linf() does the same as linf().
 """
 
 import numpy as np
-from linf.linfs import AdaptiveLinf, Linf
+from src.linfs import AdaptiveLinf, Linf
 
 
 def test_linf():

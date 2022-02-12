@@ -3,8 +3,8 @@ Test get_likelihood in two trivial cases simple enough to work out by hand.
 """
 import numpy as np
 from scipy.special import erf
-from linf import LinfLikelihood
-from linf.helper_functions import create_theta
+from src import LinfLikelihood
+from src.helper_functions import create_theta
 
 
 def test_likelihood():
