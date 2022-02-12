@@ -25,12 +25,6 @@ class LinfLikelihood:
     """
 
     def __init__(self, x_min, x_max, xs, ys, sigma, adaptive=True):
-        self._x_min = x_min
-        self._x_max = x_max
-        self._xs = xs
-        self._ys = ys
-        self._sigma = sigma
-        self._adaptive = adaptive
         self._likelihood_function = create_likelihood_function(
             x_min, x_max, xs, ys, sigma, adaptive
         )
