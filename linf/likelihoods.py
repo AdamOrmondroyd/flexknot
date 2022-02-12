@@ -1,8 +1,5 @@
 """
 Likelihoods using linfs.
-
-I think by making a start on writing/copying this over from toy_sine it should become clear how to
-proceed with specifying the boundaries.
 """
 
 import numpy as np
@@ -15,12 +12,11 @@ from linf.helper_functions import (
 from linf.linfs import AdaptiveLinf, Linf, get_theta_n
 
 
-def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
+class LinfLikelihood:
     """
-    Creates a likelihood for a linear interpolation function, relative to data described
-    by xs, ys, and sigma.
+    Likelihood for a linf, relative to data described by xs, ys, and sigma.
 
-    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]]
+    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]].
 
     (obviously the middle two are degenerate when len(sigma) = 2, in which case
     [sigma_x, sigma_y] is assumed.)
@@ -28,11 +24,43 @@ def get_likelihood(x_min, x_max, xs, ys, sigma, adaptive=True):
     Returns likelihood(theta) -> log(L), [] where [] is the (lack of) derived parameters.
     """
 
-    LOG_2_SQRT_2πλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
+    def __init__(self, x_min, x_max, xs, ys, sigma, adaptive=True):
+        self._x_min = x_min
+        self._x_max = x_max
+        self._xs = xs
+        self._ys = ys
+        self._sigma = sigma
+        self._adaptive = adaptive
+        self._likelihood_function = create_likelihood_function(
+            x_min, x_max, xs, ys, sigma, adaptive
+        )
 
-    # ## is sorting actually necessary? Will test in toy sine
-    # xs_sorted_index = np.argsort(xs)
-    # xs, ys = xs[xs_sorted_index], ys[xs_sorted_index]
+    def __call__(self, theta):
+        """
+        Likelihood relative to a linf with parameters theta.
+
+        If using the adaptive linf, the first element of theta is n; ceil(n) is the number of
+        interior nodes used to calculate the likelihood.
+
+        theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1].
+
+        Otherwise, theta is the same but without n.
+
+        theta = [y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1].
+        """
+        return self._likelihood_function(theta)
+
+
+def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
+    """
+    Creates a likelihood function for a linf, relative to data descrived by xs, ys, and sigma.
+
+    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs, sigma_ys]].
+
+    (obviously the middle two are degenerate when len(sigma) = 2, in which case
+    [sigma_x, sigma_y] is assumed.)
+    """
+    LOG_2_SQRT_2πλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
 
     # check for sigma_x
     has_sigma_x = False
