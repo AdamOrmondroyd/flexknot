@@ -16,7 +16,7 @@ from linf.helper_functions import (
 from pypolychord.priors import UniformPrior, SortedUniformPrior
 
 
-class LinfPrior:
+class LinfPrior(UniformPrior):
     """
     Interleaved uniform and sorted uniform priors appropriate for a linf.
     """
