@@ -39,10 +39,6 @@ class Linf:
 
         y0 and yn+1 are the y values corresponding to x_min and x_max respecively.
         """
-<<<<<<< HEAD
-=======
-
->>>>>>> oop
         return np.interp(
             x,
             np.concatenate(([self.x_min], get_x_nodes_from_theta(theta), [self.x_max])),

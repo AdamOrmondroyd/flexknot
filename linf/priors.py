@@ -8,7 +8,7 @@ Currently going for n then interleaving x_nodes and y_nodes.
 """
 import numpy as np
 
-from helper_functions import (
+from linf.helper_functions import (
     create_theta,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
@@ -58,6 +58,8 @@ class AdaptiveLinfPrior(LinfPrior):
         where n_max is the greatest allowed value of ceil(n).
         """
         return np.concatenate(
-            UniformPrior(0, self.n_max)(theta[0:1]),
-            super().__call__(theta[1:]),
+            (
+                UniformPrior(0, self.n_max)(theta[0:1]),
+                super().__call__(theta[1:]),
+            )
         )
