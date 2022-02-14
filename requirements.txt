@@ -1,5 +1,4 @@
 numpy
 scipy
 black
-wheel
 git+https://github.com/Ormorod/PolyChordLite
