@@ -1,4 +1,3 @@
 numpy
 scipy
-black
 git+https://github.com/Ormorod/PolyChordLite@master
