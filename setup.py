@@ -18,4 +18,9 @@ setuptools.setup(
         "Licence :: TODO",
         "Operating System :: OS Independent",
     ],
+    install_requires=[
+        "numpy",
+        "scipy",
+        "pypolychord @ git+https://github.com/Ormorod/PolyChordLite@master",
+    ],
 )
