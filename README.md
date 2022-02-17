@@ -6,4 +6,4 @@ If I get this right, I should be able to use this to investigate w(z) and so on.
 
 To pip install:
 
-```$ pip install git+https://github.com/Ormorod/linf@main```
+    ```pip install git+https://github.com/Ormorod/linf@main```
