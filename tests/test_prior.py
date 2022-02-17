@@ -3,8 +3,8 @@ Test that LinfPrior
 """
 
 import numpy as np
-from linf import AdaptiveLinfPrior, LinfPrior
-from linf.helper_functions import create_theta, get_x_nodes_from_theta
+from linf import LinfPrior
+from linf.helper_functions import get_x_nodes_from_theta
 
 rng = np.random.default_rng()
 x_min = 0
