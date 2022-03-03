@@ -16,7 +16,7 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "Licence :: TODO",
-        "Operating System :: OS Independent",
+        "Operating System :: Linux",
     ],
     install_requires=[
         "numpy",
