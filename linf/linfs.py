@@ -35,10 +35,16 @@ class Linf:
 
     def __call__(self, x, theta):
         """
+        linf with end nodes at x_min and x_max
+
         theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
 
         y0 and yn+1 are the y values corresponding to x_min and x_max respecively.
+
+        If theta only contains a single element, the linf is constant at that value.
         """
+        if 1 == len(theta):
+            return np.full_like(x, theta[-1])
         return np.interp(
             x,
             np.concatenate(([self.x_min], get_x_nodes_from_theta(theta), [self.x_max])),
@@ -59,8 +65,10 @@ class AdaptiveLinf(Linf):
     The first element of theta is n; ceil(n) is number of interior nodes used in
     the linear interpolation model.
 
-    theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1],
-    where n is the greatest allowed value of ceil(n).
+    theta = [n, y0, x1, y1, x2, y2, ..., x_nmax, y_nmax, y_nmax+1],
+    where nmax is the greatest allowed value of ceil(n).
+
+    if ceil(n) = -1, the linf is constant at theta[-1] = y_n+1.
     """
 
     def __call__(self, x, theta):
@@ -69,7 +77,9 @@ class AdaptiveLinf(Linf):
         the linear interpolation model. This is then used to select the
         appropriate other elements of params to pass to linf()
 
-        theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1],
-        where n is the greatest allowed value of ceil(n).
+        theta = [n, y0, x1, y1, x2, y2, ..., x_nmax, y_nmax, y_nmax+1],
+        where nmax is the greatest allowed value of ceil(n).
+
+        if ceil(n) = -1, the linf is constant at theta[-1] = y_n+1.
         """
         return super().__call__(x, get_theta_n(theta))
