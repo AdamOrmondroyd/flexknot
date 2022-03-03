@@ -1,5 +1,5 @@
 """
-Test that LinfPrior
+Test that LinfPrior sorts the x nodes.
 """
 
 import numpy as np
