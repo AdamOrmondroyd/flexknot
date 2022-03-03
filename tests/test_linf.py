@@ -32,11 +32,28 @@ def test_adaptive_linf():
     """
     Test that adaptive_linf returns the same results as linf with appropriate arguments.
     """
-    x_min = 0.0
-    x_max = 6.0
+    x_min = 0
+    x_max = 6
     theta = np.array([2.5, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6])
     theta_n = np.array([0, 1, 1, 2, 2, 3, 3, 6])
     xs = np.linspace(x_min, x_max, 100)
     assert np.all(
         Linf(x_min, x_max)(xs, theta_n) == AdaptiveLinf(x_min, x_max)(xs, theta)
+    )
+
+
+def test_adaptive_flat():
+    """
+    Test that adaptive_linf returns fill_like(x, theta[-1]) when ceil(n) = -1.
+    """
+    rng = np.random.default_rng()
+    x_min = 0
+    x_max = rng.random()
+    n_max = 10
+    # just set theta to random values between x_min and x_max
+    theta = rng.random(2 * n_max + 3) * (x_max - x_min) + x_min
+    # set n = theta[0] so it rounds up to -1
+    theta[0] = rng.random() - 2
+    assert np.all(
+        theta[-1] == AdaptiveLinf(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
     )
