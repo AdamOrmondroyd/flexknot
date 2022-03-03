@@ -25,8 +25,8 @@ def validate_theta(theta, adaptive=True):
             raise ValueError(
                 "theta must contain an even number of elements for a non-adaptive linf."
             )
-        if len(theta) < 2:
-            raise ValueError("theta must contain at least two elements [y0, yn].")
+        if 0 == len(theta):
+            raise ValueError("theta must contain at least one element [y_0, y_nmax].")
 
 
 def get_theta_n(theta):
