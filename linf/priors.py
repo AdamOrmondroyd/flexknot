@@ -59,7 +59,7 @@ class AdaptiveLinfPrior(LinfPrior):
         """
         return np.concatenate(
             (
-                UniformPrior(0, self.n_max)(theta[0:1]),
+                UniformPrior(-1, self.n_max)(theta[0:1]),
                 super().__call__(theta[1:]),
             )
         )
