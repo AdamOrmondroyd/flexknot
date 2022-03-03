@@ -2,10 +2,10 @@
 Linear INterpolation Functions.
 
 theta refers to the full set of parameters for an adaptive linear interpolation model,
-[n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
-where N is the greatest allowed value of ceil(n).
+[n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1],
+where n is the greatest allowed value of ceil(n).
 
-The reason for the interleaving of x and y is it avoids the need to know N.
+The reason for the interleaving of x and y is it avoids the need to know n.
 """
 import numpy as np
 
@@ -59,8 +59,8 @@ class AdaptiveLinf(Linf):
     The first element of theta is n; ceil(n) is number of interior nodes used in
     the linear interpolation model.
 
-    theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
-    where N is the greatest allowed value of ceil(n).
+    theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1],
+    where n is the greatest allowed value of ceil(n).
     """
 
     def __call__(self, x, theta):
@@ -69,7 +69,7 @@ class AdaptiveLinf(Linf):
         the linear interpolation model. This is then used to select the
         appropriate other elements of params to pass to linf()
 
-        theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_N+1],
-        where N is the greatest allowed value of ceil(n).
+        theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1],
+        where n is the greatest allowed value of ceil(n).
         """
         return super().__call__(x, get_theta_n(theta))

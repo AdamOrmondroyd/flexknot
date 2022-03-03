@@ -13,13 +13,13 @@ def test_linf():
     """
     x_min = 0
     x_max = 1
-    N = 8
+    n = 8
     rng = np.random.default_rng()
-    x_nodes = np.sort(rng.uniform(x_min, x_max, N))
-    y_nodes = rng.uniform(-10, 10, N + 2)
+    x_nodes = np.sort(rng.uniform(x_min, x_max, n))
+    y_nodes = rng.uniform(-10, 10, n + 2)
     theta = np.zeros(len(x_nodes) + len(y_nodes))
-    theta[1 : 2 * N + 1 : 2] = x_nodes
-    theta[0 : 2 * N + 2 : 2] = y_nodes[:-1]
+    theta[1 : 2 * n + 1 : 2] = x_nodes
+    theta[0 : 2 * n + 2 : 2] = y_nodes[:-1]
     theta[-1] = y_nodes[-1]
     xs = np.linspace(x_min, x_max, 100)
     assert np.all(

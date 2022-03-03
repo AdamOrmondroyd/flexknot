@@ -54,7 +54,7 @@ class AdaptiveLinfPrior(LinfPrior):
         """
         Prior for adaptive linf.
 
-        theta = [n, y0, x1, y1, x2, y2, ..., x_N, y_N, y_(n_max+1)],
+        theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_(n_max+1)],
         where n_max is the greatest allowed value of ceil(n).
         """
         return np.concatenate(
