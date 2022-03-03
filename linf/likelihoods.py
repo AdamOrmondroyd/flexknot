@@ -72,9 +72,12 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
         var_y = sigma_y**2
 
         def xy_errors_likelihood(theta):
-            n = len(theta) // 2 - 1
             x_nodes = np.concatenate(([x_min], get_x_nodes_from_theta(theta), [x_max]))
-            y_nodes = get_y_nodes_from_theta(theta)
+
+            if 1 == len(theta):  # flat case
+                y_nodes = np.array([theta[0], theta[0]])
+            else:
+                y_nodes = get_y_nodes_from_theta(theta)
 
             ms = (y_nodes[1:] - y_nodes[:-1]) / (x_nodes[1:] - x_nodes[:-1])
             cs = y_nodes[:-1] - ms * x_nodes[:-1]
