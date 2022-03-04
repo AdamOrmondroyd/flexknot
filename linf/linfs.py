@@ -33,6 +33,8 @@ class Linf:
         self.x_min = x_min
         self.x_max = x_max
 
+        self.adaptive = False
+
     def __call__(self, x, theta):
         """
         linf with end nodes at x_min and x_max
@@ -47,8 +49,14 @@ class Linf:
             return np.full_like(x, theta[-1])
         return np.interp(
             x,
-            np.concatenate(([self.x_min], get_x_nodes_from_theta(theta), [self.x_max])),
-            get_y_nodes_from_theta(theta),
+            np.concatenate(
+                (
+                    [self.x_min],
+                    get_x_nodes_from_theta(theta, self.adaptive),
+                    [self.x_max],
+                )
+            ),
+            get_y_nodes_from_theta(theta, self.adaptive),
         )
 
 
@@ -62,24 +70,30 @@ class AdaptiveLinf(Linf):
     Returns:
     adaptive_linf(x, theta)
 
-    The first element of theta is n; ceil(n) is number of interior nodes used in
+    The first element of theta is N; floor(N)-2 is number of interior nodes used in
     the linear interpolation model.
 
-    theta = [n, y0, x1, y1, x2, y2, ..., x_nmax, y_nmax, y_nmax+1],
-    where nmax is the greatest allowed value of ceil(n).
+    theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
+    where Nmax is the greatest allowed value of floor(N).
 
-    if ceil(n) = -1, the linf is constant at theta[-1] = y_n+1.
+    if floor(N) = 1, the linf is constant at theta[-1] = y_(Nmax-1).
+    if floor(N) = 0, the linf is constant at -1 (cosmology!)
     """
+
+    def __init__(self, x_min, x_max):
+        self.adaptive = True
+        super().__init__(x_min, x_max)
 
     def __call__(self, x, theta):
         """
-        The first element of theta is n; ceil(n) is number of interior nodes used in
+        The first element of theta is N; floor(N)-2 is number of interior nodes used in
         the linear interpolation model. This is then used to select the
         appropriate other elements of params to pass to linf()
 
         theta = [n, y0, x1, y1, x2, y2, ..., x_nmax, y_nmax, y_nmax+1],
         where nmax is the greatest allowed value of ceil(n).
 
-        if ceil(n) = -1, the linf is constant at theta[-1] = y_n+1.
+        if floor(N) = 1, the linf is constant at theta[-1] = y_(Nmax-1).
+        if floor(N) = 0, the linf is constant at -1 (cosmology!)
         """
         return super().__call__(x, get_theta_n(theta))

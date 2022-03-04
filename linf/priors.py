@@ -46,20 +46,20 @@ class AdaptiveLinfPrior(LinfPrior):
     n_max: int is the maximum number of nodes to use with an interactive linf.
     """
 
-    def __init__(self, x_min, x_max, y_min, y_max, n_max):
-        self.n_max = n_max
+    def __init__(self, x_min, x_max, y_min, y_max, N_max):
+        self.N_max = N_max
         super().__init__(x_min, x_max, y_min, y_max)
 
     def __call__(self, theta):
         """
         Prior for adaptive linf.
 
-        theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_(n_max+1)],
-        where n_max is the greatest allowed value of ceil(n).
+        theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
+        where Nmax is the greatest allowed value of floor(N).
         """
         return np.concatenate(
             (
-                UniformPrior(-2, self.n_max)(theta[0:1]),
+                UniformPrior(0, self.N_max_1)(theta[0:1]),
                 super().__call__(theta[1:]),
             )
         )

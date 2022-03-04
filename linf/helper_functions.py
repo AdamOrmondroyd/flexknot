@@ -8,7 +8,7 @@ import numpy as np
 def validate_theta(theta, adaptive=True):
     """
     Check that theta contains an odd/even number of elements for an adaptive/
-    non-adaptive linf, and in the adaptive case that n = ceil(theta[0]) isn't
+    non-adaptive linf, and in the adaptive case that n = floor(theta[0])-2 isn't
     greater than the provided number of internal nodes.
     """
     if adaptive:
@@ -18,30 +18,30 @@ def validate_theta(theta, adaptive=True):
             )
         if np.ceil(theta[0]) > (len(theta) - 3) / 2:
             raise ValueError("n = ceil(theta[0]) exceeds the number of internal nodes.")
-        if len(theta) < 3:
-            raise ValueError("Theta must contain at least three elements [n, y0, yn].")
+
     if not adaptive:
         if len(theta) > 1 and len(theta) % 2 != 0:
             raise ValueError(
                 "theta must contain an even number of elements for a non-adaptive linf."
             )
-        if 0 == len(theta):
-            raise ValueError("theta must contain at least one element [y_0, y_nmax].")
 
 
 def get_theta_n(theta):
     """
     Extracts the first n parameters from
 
-    theta = [n, y0, x1, y1, x2, y2, ..., x_nmax, y_nmax, y_nmax+1]
+    theta = [N, y0, x1, y1, x2, y2, ..., x_Nmax, y_Nmax, y_Nmax+1]
 
-    where nmax is the maximum value of ceil(n).
+    where Nmax is the maximum value of floor(N)-2.
 
-    returns theta_n = [y0, x1, y1, x2, y2, ..., x_ceil(n), y_ceil(n), y_nmax+1]
+    returns theta_n = [y0, x1, y1, x2, y2, ..., x_floor(N)-2, y_floor(N)-2, y_Nmax+1]
     """
     validate_theta(theta, adaptive=True)
 
-    n = np.ceil(theta[0]).astype(int)
+    n = np.floor(theta[0]).astype(int) - 2
+    # w = -1 case, return empty
+    if -2 == n:
+        return np.array([])
     theta_n = np.concatenate(
         (
             theta[1 : 2 * n + 2],  # y0 and internal x and y
@@ -86,5 +86,9 @@ def get_y_nodes_from_theta(theta, adaptive=False):
     validate_theta(theta, adaptive)
     if adaptive:
         theta = theta[1:]
+    if 0 == len(theta):
+        return np.array([-1, -1])
+    elif 1 == len(theta):
+        return np.array([theta[-1], theta[-1]])
     n = len(theta) // 2 - 1
     return np.concatenate((theta[0 : 2 * n + 2 : 2], theta[-1:]))
