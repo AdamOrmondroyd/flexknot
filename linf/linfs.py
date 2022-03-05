@@ -33,8 +33,6 @@ class Linf:
         self.x_min = x_min
         self.x_max = x_max
 
-        self.adaptive = False
-
     def __call__(self, x, theta):
         """
         linf with end nodes at x_min and x_max
@@ -45,6 +43,8 @@ class Linf:
 
         If theta only contains a single element, the linf is constant at that value.
         """
+        if 0 == len(theta):
+            return np.full_like(x, -1)
         if 1 == len(theta):
             return np.full_like(x, theta[-1])
         return np.interp(
@@ -52,11 +52,11 @@ class Linf:
             np.concatenate(
                 (
                     [self.x_min],
-                    get_x_nodes_from_theta(theta, self.adaptive),
+                    get_x_nodes_from_theta(theta),
                     [self.x_max],
                 )
             ),
-            get_y_nodes_from_theta(theta, self.adaptive),
+            get_y_nodes_from_theta(theta),
         )
 
 
@@ -79,10 +79,6 @@ class AdaptiveLinf(Linf):
     if floor(N) = 1, the linf is constant at theta[-1] = y_(Nmax-1).
     if floor(N) = 0, the linf is constant at -1 (cosmology!)
     """
-
-    def __init__(self, x_min, x_max):
-        self.adaptive = True
-        super().__init__(x_min, x_max)
 
     def __call__(self, x, theta):
         """

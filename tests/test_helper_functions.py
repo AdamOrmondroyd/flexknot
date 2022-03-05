@@ -25,6 +25,18 @@ def test_get_theta_n():
     assert np.all(np.array([0, 1, 1, 2, 2, 3, 3, 6]) == theta_n)
 
 
+def test_get_theta_one():
+    theta = np.array([1.5, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6])
+    theta_n = get_theta_n(theta)
+    assert theta_n == 6
+
+
+def test_get_theta_zero():
+    theta = np.array([0.5, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6])
+    theta_n = get_theta_n(theta)
+    assert 0 == len(theta_n)
+
+
 def test_create_theta():
     """
     Test that create_theta() combines x_nodes and y_nodes correctly.

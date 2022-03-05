@@ -30,11 +30,11 @@ def get_theta_n(theta):
     """
     Extracts the first n parameters from
 
-    theta = [N, y0, x1, y1, x2, y2, ..., x_Nmax, y_Nmax, y_Nmax+1]
+    theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)]
 
-    where Nmax is the maximum value of floor(N)-2.
+    where Nmax is the maximum value of floor(N).
 
-    returns theta_n = [y0, x1, y1, x2, y2, ..., x_floor(N)-2, y_floor(N)-2, y_Nmax+1]
+    returns theta_n = [y0, x1, y1, x2, y2, ..., x_floor(N)-2, y_floor(N)-2, y_(Nmax-1)]
     """
     validate_theta(theta, adaptive=True)
 
@@ -86,9 +86,9 @@ def get_y_nodes_from_theta(theta, adaptive=False):
     validate_theta(theta, adaptive)
     if adaptive:
         theta = theta[1:]
-    if 0 == len(theta):
-        return np.array([-1, -1])
-    elif 1 == len(theta):
-        return np.array([theta[-1], theta[-1]])
+    # if 0 == len(theta):
+    #     return np.array([-1, -1])
+    # elif 1 == len(theta):
+    #     return np.array([theta[-1], theta[-1]])
     n = len(theta) // 2 - 1
     return np.concatenate((theta[0 : 2 * n + 2 : 2], theta[-1:]))
