@@ -56,6 +56,11 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
     """
     LOG_2_SQRT_2πλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
 
+    if adaptive:
+        linf = AdaptiveLinf(x_min, x_max)
+    else:
+        linf = Linf(x_min, x_max)
+
     # check for sigma_x
     has_sigma_x = False
     if hasattr(sigma, "__len__"):
@@ -75,8 +80,8 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
             x_nodes = np.concatenate(
                 ([x_min], get_x_nodes_from_theta(theta, adaptive), [x_max])
             )
-
-            y_nodes = get_y_nodes_from_theta(theta, adaptive)
+            # use linf to get y nodes, as this is simplest way of dealing with N=0 or 1
+            y_nodes = linf(x_nodes, theta)
 
             ms = (y_nodes[1:] - y_nodes[:-1]) / (x_nodes[1:] - x_nodes[:-1])
             cs = y_nodes[:-1] - ms * x_nodes[:-1]
@@ -117,11 +122,6 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
     # sigma_y only
 
     var_y = sigma**2
-
-    if adaptive:
-        linf = AdaptiveLinf(x_min, x_max)
-    else:
-        linf = Linf(x_min, x_max)
 
     def y_errors_likelihood(theta):
         if hasattr(var_y, "__len__"):
