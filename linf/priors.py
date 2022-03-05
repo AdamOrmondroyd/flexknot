@@ -7,13 +7,12 @@ goes on to make a linf work.
 Currently going for n then interleaving x_nodes and y_nodes.
 """
 import numpy as np
-
+from pypolychord.priors import UniformPrior, SortedUniformPrior
 from linf.helper_functions import (
     create_theta,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
 )
-from pypolychord.priors import UniformPrior, SortedUniformPrior
 
 
 class LinfPrior(UniformPrior):
@@ -59,7 +58,7 @@ class AdaptiveLinfPrior(LinfPrior):
         """
         return np.concatenate(
             (
-                UniformPrior(0, self.N_max_1)(theta[0:1]),
+                UniformPrior(0, self.N_max)(theta[0:1]),
                 super().__call__(theta[1:]),
             )
         )
