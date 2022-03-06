@@ -26,7 +26,7 @@ class Linf:
     Returns:
     linf(x, theta)
 
-    theta in format [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
+    theta in format [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
     """
 
     def __init__(self, x_min, x_max):
@@ -37,11 +37,12 @@ class Linf:
         """
         linf with end nodes at x_min and x_max
 
-        theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] for n internal nodes.
+        theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
 
-        y0 and yn+1 are the y values corresponding to x_min and x_max respecively.
+        y0 and y_(N-1) are the y values corresponding to x_min and x_max respecively.
 
         If theta only contains a single element, the linf is constant at that value.
+        If theta is empty, the linf if comstant at -1 (cosmology!)
         """
         if 0 == len(theta):
             return np.full_like(x, -1)
@@ -86,8 +87,8 @@ class AdaptiveLinf(Linf):
         the linear interpolation model. This is then used to select the
         appropriate other elements of params to pass to linf()
 
-        theta = [n, y0, x1, y1, x2, y2, ..., x_nmax, y_nmax, y_nmax+1],
-        where nmax is the greatest allowed value of ceil(n).
+        theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
+        where Nmax is the greatest allowed value of floor(N).
 
         if floor(N) = 1, the linf is constant at theta[-1] = y_(Nmax-1).
         if floor(N) = 0, the linf is constant at -1 (cosmology!)

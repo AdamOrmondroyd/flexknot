@@ -31,14 +31,14 @@ class LinfLikelihood:
         """
         Likelihood relative to a linf with parameters theta.
 
-        If using the adaptive linf, the first element of theta is n; ceil(n) is the number of
-        interior nodes used to calculate the likelihood.
+        If self.adaptive = True, the first element of theta is N; floor(N) is the number of
+        nodes used to calculate the likelihood.
 
-        theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1].
+        theta = [N, y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
 
         Otherwise, theta is the same but without n.
 
-        theta = [y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1].
+        theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)].
         """
         return self._likelihood_function(theta)
 
