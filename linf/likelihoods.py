@@ -5,9 +5,7 @@ Likelihoods using linfs.
 import numpy as np
 from scipy.special import erf
 from linf.helper_functions import (
-    get_theta_n,
     get_x_nodes_from_theta,
-    get_y_nodes_from_theta,
 )
 from linf.linfs import AdaptiveLinf, Linf, get_theta_n
 
@@ -33,14 +31,14 @@ class LinfLikelihood:
         """
         Likelihood relative to a linf with parameters theta.
 
-        If using the adaptive linf, the first element of theta is n; ceil(n) is the number of
-        interior nodes used to calculate the likelihood.
+        If self.adaptive = True, the first element of theta is N; floor(N) is the number of
+        nodes used to calculate the likelihood.
 
-        theta = [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1].
+        theta = [N, y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
 
         Otherwise, theta is the same but without n.
 
-        theta = [y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1].
+        theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)].
         """
         return self._likelihood_function(theta)
 
@@ -55,6 +53,11 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
     [sigma_x, sigma_y] is assumed.)
     """
     LOG_2_SQRT_2πλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
+
+    if adaptive:
+        linf = AdaptiveLinf(x_min, x_max)
+    else:
+        linf = Linf(x_min, x_max)
 
     # check for sigma_x
     has_sigma_x = False
@@ -72,12 +75,11 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
         var_y = sigma_y**2
 
         def xy_errors_likelihood(theta):
-            x_nodes = np.concatenate(([x_min], get_x_nodes_from_theta(theta), [x_max]))
-
-            if 1 == len(theta):  # flat case
-                y_nodes = np.array([theta[0], theta[0]])
-            else:
-                y_nodes = get_y_nodes_from_theta(theta)
+            x_nodes = np.concatenate(
+                ([x_min], get_x_nodes_from_theta(theta, adaptive), [x_max])
+            )
+            # use linf to get y nodes, as this is simplest way of dealing with N=0 or 1
+            y_nodes = linf(x_nodes, theta)
 
             ms = (y_nodes[1:] - y_nodes[:-1]) / (x_nodes[1:] - x_nodes[:-1])
             cs = y_nodes[:-1] - ms * x_nodes[:-1]
@@ -104,25 +106,20 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
 
             return logL, []
 
-        if adaptive:
+        # if adaptive:
 
-            def super_likelihood(theta):
+        #     def super_likelihood(theta):
 
-                theta_n = get_theta_n(theta)
-                return xy_errors_likelihood(theta_n)
+        #         theta_n = get_theta_n(theta)
+        #         return xy_errors_likelihood(theta_n)
 
-            return super_likelihood
+        #     return super_likelihood
 
         return xy_errors_likelihood
 
     # sigma_y only
 
     var_y = sigma**2
-
-    if adaptive:
-        linf = AdaptiveLinf(x_min, x_max)
-    else:
-        linf = Linf(x_min, x_max)
 
     def y_errors_likelihood(theta):
         if hasattr(var_y, "__len__"):

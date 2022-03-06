@@ -8,7 +8,7 @@ import numpy as np
 def validate_theta(theta, adaptive=True):
     """
     Check that theta contains an odd/even number of elements for an adaptive/
-    non-adaptive linf, and in the adaptive case that n = ceil(theta[0]) isn't
+    non-adaptive linf, and in the adaptive case that floor(theta[0])-2 isn't
     greater than the provided number of internal nodes.
     """
     if adaptive:
@@ -16,32 +16,32 @@ def validate_theta(theta, adaptive=True):
             raise ValueError(
                 "theta must contain an odd number of elements for an adaptive linf."
             )
-        if np.ceil(theta[0]) > (len(theta) - 3) / 2:
+        if np.floor(theta[0]) > (len(theta) + 1) / 2:
             raise ValueError("n = ceil(theta[0]) exceeds the number of internal nodes.")
-        if len(theta) < 3:
-            raise ValueError("Theta must contain at least three elements [n, y0, yn].")
+
     if not adaptive:
         if len(theta) > 1 and len(theta) % 2 != 0:
             raise ValueError(
                 "theta must contain an even number of elements for a non-adaptive linf."
             )
-        if 0 == len(theta):
-            raise ValueError("theta must contain at least one element [y_0, y_nmax].")
 
 
 def get_theta_n(theta):
     """
     Extracts the first n parameters from
 
-    theta = [n, y0, x1, y1, x2, y2, ..., x_nmax, y_nmax, y_nmax+1]
+    theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)]
 
-    where nmax is the maximum value of ceil(n).
+    where Nmax is the maximum value of floor(N).
 
-    returns theta_n = [y0, x1, y1, x2, y2, ..., x_ceil(n), y_ceil(n), y_nmax+1]
+    returns theta_n = [y0, x1, y1, x2, y2, ..., x_floor(N)-2, y_floor(N)-2, y_(Nmax-1)]
     """
     validate_theta(theta, adaptive=True)
 
-    n = np.ceil(theta[0]).astype(int)
+    n = np.floor(theta[0]).astype(int) - 2
+    # w = -1 case, return empty
+    if -2 == n:
+        return np.array([])
     theta_n = np.concatenate(
         (
             theta[1 : 2 * n + 2],  # y0 and internal x and y
@@ -53,8 +53,9 @@ def get_theta_n(theta):
 
 def create_theta(x_nodes, y_nodes):
     """
-    Takes x_nodes = [x1, ... x_n] and y_nodes = [y0, y1, ..., yn, y(n+1)] to
-    return theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1]
+    Takes x_nodes = [x1, ... x_(N-2)] and y_nodes = [y0, y1, ..., y_(N-2), y_(N-1)] to
+    return theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)], where
+    N is the number of nodes.
     """
     if len(x_nodes) + 2 != len(y_nodes):
         raise ValueError("y_nodes must have exactly two more elements than x_nodes")
@@ -68,8 +69,8 @@ def create_theta(x_nodes, y_nodes):
 
 def get_x_nodes_from_theta(theta, adaptive=False):
     """
-    Takes theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] to return
-    x_nodes = [x1, x2, ..., xn]
+    Takes theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] to return
+    x_nodes = [x1, ... x_(N-2)], where N is the number of nodes.
     """
     validate_theta(theta, adaptive)
     if adaptive:
@@ -80,8 +81,8 @@ def get_x_nodes_from_theta(theta, adaptive=False):
 
 def get_y_nodes_from_theta(theta, adaptive=False):
     """
-    Takes theta = [y0, x1, y1, x2, y2, ..., xn, yn, yn+1] to return
-    y_nodes = [x0, x1, ..., yn, yn+1]
+    Takes theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] to return
+    y_nodes = [y0, y1, ..., y_(N-2), y_(N-1)], where N is the number of nodes.
     """
     validate_theta(theta, adaptive)
     if adaptive:

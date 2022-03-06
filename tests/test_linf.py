@@ -44,16 +44,35 @@ def test_adaptive_linf():
 
 def test_adaptive_flat():
     """
-    Test that adaptive_linf returns fill_like(x, theta[-1]) when ceil(n) = -1.
+    Test that adaptive_linf returns array of theta[-1] when floor(N) = 1.
     """
     rng = np.random.default_rng()
     x_min = 0
     x_max = rng.random()
-    n_max = 10
+    N_max = 10
     # just set theta to random values between x_min and x_max
-    theta = rng.random(2 * n_max + 3) * (x_max - x_min) + x_min
-    # set n = theta[0] so it rounds up to -1
-    theta[0] = rng.random() - 2
+    theta = rng.random(2 * N_max - 1) * (x_max - x_min) + x_min
+    # set N = theta[0] so it rounds down to 1
+    theta[0] = rng.random() + 1
     assert np.all(
-        theta[-1] == AdaptiveLinf(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
+        np.full(100, theta[-1])
+        == AdaptiveLinf(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
+    )
+
+
+def test_adaptive_minus_1():
+    """
+    Test that adaptive_linf returns array of -1 when floor(N) = 0.
+    """
+    rng = np.random.default_rng()
+    x_min = 0
+    x_max = rng.random()
+    N_max = 10
+    # just set theta to random values between x_min and x_max
+    theta = rng.random(2 * N_max - 1) * (x_max - x_min) + x_min
+    # set N = theta[0] so it rounds down to 1
+    theta[0] = rng.random()
+    assert np.all(
+        np.full(100, -1)
+        == AdaptiveLinf(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
     )
