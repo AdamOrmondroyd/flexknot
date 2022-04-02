@@ -21,6 +21,6 @@ setuptools.setup(
     install_requires=[
         "numpy",
         "scipy",
-        "pypolychord @ git+https://github.com/Ormorod/PolyChordLite@master",
+        "pypolychord @ git+https://github.com/PolyChord/PolyChordLite@master",
     ],
 )
