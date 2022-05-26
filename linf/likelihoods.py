@@ -98,7 +98,10 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
             logL += np.sum(
                 np.log(
                     np.sum(
-                        np.exp(-gamma) * q**-0.5 * (erf(t_plus) - erf(t_minus)),
+                        # put log(erf) in the logsumexp
+                        np.exp(
+                            -gamma + np.log(q**-0.5 * (erf(t_plus) - erf(t_minus)))
+                        ),
                         axis=-1,
                     )
                 )
