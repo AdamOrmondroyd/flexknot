@@ -3,7 +3,7 @@ Likelihoods using linfs.
 """
 
 import numpy as np
-from scipy.special import erf
+from scipy.special import erf, logsumexp
 from linf.helper_functions import (
     get_x_nodes_from_theta,
 )
@@ -96,11 +96,9 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
 
             logL = -len(xs) * LOG_2_SQRT_2πλ
             logL += np.sum(
-                np.log(
-                    np.sum(
-                        np.exp(-gamma) * q**-0.5 * (erf(t_plus) - erf(t_minus)),
-                        axis=-1,
-                    )
+                logsumexp(
+                    -gamma + np.log(q**-0.5 * (erf(t_plus) - erf(t_minus))),
+                    axis=-1,
                 )
             )
 
