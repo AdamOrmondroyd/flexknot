@@ -32,8 +32,12 @@ class LinfPrior(UniformPrior):
 
         theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
         """
+        if len(theta) > 2:
+            x_prior = SortedUniformPrior(self.x_min, self.x_max)(get_x_nodes_from_theta(theta))
+        else:
+            x_prior = np.array([])
         return create_theta(
-            SortedUniformPrior(self.x_min, self.x_max)(get_x_nodes_from_theta(theta)),
+            x_prior, 
             UniformPrior(self.y_min, self.y_max)(get_y_nodes_from_theta(theta)),
         )
 
@@ -45,7 +49,8 @@ class AdaptiveLinfPrior(LinfPrior):
     N_max: int is the maximum number of nodes to use with an interactive linf.
     """
 
-    def __init__(self, x_min, x_max, y_min, y_max, N_max):
+    def __init__(self, x_min, x_max, y_min, y_max, N_min, N_max):
+        self.N_min = N_min
         self.N_max = N_max
         super().__init__(x_min, x_max, y_min, y_max)
 
@@ -58,7 +63,7 @@ class AdaptiveLinfPrior(LinfPrior):
         """
         return np.concatenate(
             (
-                UniformPrior(0, self.N_max + 1)(theta[0:1]),
+                UniformPrior(self.N_min, self.N_max + 1)(theta[0:1]),
                 super().__call__(theta[1:]),
             )
         )

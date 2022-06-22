@@ -57,6 +57,8 @@ def create_theta(x_nodes, y_nodes):
     return theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)], where
     N is the number of nodes.
     """
+    if len(y_nodes) == 1:
+        return y_nodes
     if len(x_nodes) + 2 != len(y_nodes):
         raise ValueError("y_nodes must have exactly two more elements than x_nodes")
     n = len(x_nodes)
