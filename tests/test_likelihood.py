@@ -50,4 +50,4 @@ def test_likelihood_sigma_x():
     sigma = np.array([1, 1])
 
     l = LinfLikelihood(x_min, x_max, x_data, y_data, sigma, adaptive=False)
-    assert l(theta)[0] == np.log((erf(1) - erf(0)) * (erf(0) - erf(-1)) / (16 * np.pi))
+    assert np.isclose(l(theta)[0], np.log((erf(1) - erf(0)) * (erf(0) - erf(-1)) / (16 * np.pi)))
