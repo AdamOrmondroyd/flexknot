@@ -48,7 +48,7 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
     """
     Creates a likelihood function for a linf, relative to data descrived by xs, ys, and sigma.
 
-    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs, sigma_ys]].
+    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]].
 
     (obviously the middle two are degenerate when len(sigma) = 2, in which case
     [sigma_x, sigma_y] is assumed.)
@@ -69,7 +69,6 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
             has_sigma_x = True
 
     if has_sigma_x:
-        # sigma balls
         sigma_x = sigma[0]
         sigma_y = sigma[1]
         var_x = sigma_x**2
