@@ -98,7 +98,7 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
             logL = -len(xs) * LOG_2_SQRT_2πλ
             logL += np.sum(
                 logsumexp(
-                    -gamma + np.log(q**-0.5 * (erf(t_plus) - erf(t_minus))),
+                    -gamma - np.log(q) / 2 + np.log(erf(t_plus) - erf(t_minus)),
                     axis=-1,
                 )
             )
