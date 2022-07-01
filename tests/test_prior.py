@@ -21,4 +21,4 @@ def test_linfprior_y_nodes_are_sorted():
     hypercube = rng.random(2 * n + 2)
     prior = LinfPrior(x_min, x_max, y_min, y_max)(hypercube)
 
-    assert np.all(np.diff(get_x_nodes_from_theta(prior)) >= 0)
+    assert np.all(np.diff(get_x_nodes_from_theta(prior, adaptive=False)) >= 0)

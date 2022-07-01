@@ -53,11 +53,11 @@ class Linf:
             np.concatenate(
                 (
                     [self.x_min],
-                    get_x_nodes_from_theta(theta),
+                    get_x_nodes_from_theta(theta, adaptive=False),
                     [self.x_max],
                 )
             ),
-            get_y_nodes_from_theta(theta),
+            get_y_nodes_from_theta(theta, adaptive=False),
         )
 
 

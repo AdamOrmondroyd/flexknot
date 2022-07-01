@@ -33,12 +33,12 @@ class LinfPrior(UniformPrior):
         theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
         """
         if len(theta) > 2:
-            x_prior = SortedUniformPrior(self.x_min, self.x_max)(get_x_nodes_from_theta(theta))
+            x_prior = SortedUniformPrior(self.x_min, self.x_max)(get_x_nodes_from_theta(theta, adaptive=False))
         else:
             x_prior = np.array([])
         return create_theta(
             x_prior, 
-            UniformPrior(self.y_min, self.y_max)(get_y_nodes_from_theta(theta)),
+            UniformPrior(self.y_min, self.y_max)(get_y_nodes_from_theta(theta, adaptive=False)),
         )
 
 

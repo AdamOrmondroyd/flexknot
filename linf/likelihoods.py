@@ -23,7 +23,7 @@ class LinfLikelihood:
     Returns likelihood(theta) -> log(L), [] where [] is the (lack of) derived parameters.
     """
 
-    def __init__(self, x_min, x_max, xs, ys, sigma, adaptive=True):
+    def __init__(self, x_min, x_max, xs, ys, sigma, adaptive):
         self._likelihood_function = create_likelihood_function(
             x_min, x_max, xs, ys, sigma, adaptive
         )
@@ -44,7 +44,7 @@ class LinfLikelihood:
         return self._likelihood_function(theta)
 
 
-def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
+def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
     """
     Creates a likelihood function for a linf, relative to data descrived by xs, ys, and sigma.
 

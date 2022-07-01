@@ -5,7 +5,7 @@ Helpful functions for dealing with the interleaved arrangement of theta.
 import numpy as np
 
 
-def validate_theta(theta, adaptive=True):
+def validate_theta(theta, adaptive):
     """
     Check that theta contains an odd/even number of elements for an adaptive/
     non-adaptive linf, and in the adaptive case that floor(theta[0])-2 isn't
@@ -69,7 +69,7 @@ def create_theta(x_nodes, y_nodes):
     return theta
 
 
-def get_x_nodes_from_theta(theta, adaptive=False):
+def get_x_nodes_from_theta(theta, adaptive):
     """
     Takes theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] to return
     x_nodes = [x1, ... x_(N-2)], where N is the number of nodes.
@@ -81,7 +81,7 @@ def get_x_nodes_from_theta(theta, adaptive=False):
     return theta[1 : 2 * n + 1 : 2]
 
 
-def get_y_nodes_from_theta(theta, adaptive=False):
+def get_y_nodes_from_theta(theta, adaptive):
     """
     Takes theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] to return
     y_nodes = [y0, y1, ..., y_(N-2), y_(N-1)], where N is the number of nodes.
