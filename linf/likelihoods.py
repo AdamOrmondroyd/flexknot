@@ -89,7 +89,7 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
             # indices in order [data point, relevant m and c]
             q = (np.outer(var_x, ms**2).T + var_y).T
             delta = np.subtract.outer(ys, cs)
-            beta = (xs * var_y + (delta * ms).T * var_y).T / q
+            beta = (xs * var_y + (delta * ms).T * var_x).T / q
             gamma = (np.outer(xs, ms) - delta) ** 2 / 2 / q
 
             t_minus = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T * (x_nodes[:-1] - beta)
