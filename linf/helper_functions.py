@@ -76,7 +76,7 @@ def get_x_nodes_from_theta(theta, adaptive):
     """
     validate_theta(theta, adaptive)
     if adaptive:
-        theta = theta[1:]
+        theta = get_theta_n(theta)
     n = len(theta) // 2 - 1
     return theta[1 : 2 * n + 1 : 2]
 
@@ -88,6 +88,6 @@ def get_y_nodes_from_theta(theta, adaptive):
     """
     validate_theta(theta, adaptive)
     if adaptive:
-        theta = theta[1:]
+        theta = get_theta_n(theta)
     n = len(theta) // 2 - 1
     return np.concatenate((theta[0 : 2 * n + 2 : 2], theta[-1:]))

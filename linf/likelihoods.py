@@ -77,7 +77,7 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
         def xy_errors_likelihood(theta):
             
             x_nodes = np.concatenate(
-                ([x_min], get_x_nodes_from_theta(get_theta_n(theta) if adaptive else theta, adaptive=False), [x_max])
+                ([x_min], get_x_nodes_from_theta(theta, adaptive), [x_max])
             )
             # use linf to get y nodes, as this is simplest way of dealing with N=0 or 1
             y_nodes = linf(x_nodes, theta)
@@ -98,7 +98,7 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
             logL = -len(xs) * LOG_2_SQRT_2πλ
             logL += np.sum(
                 logsumexp(
-                    -gamma - np.log(q) / 2 + np.log(erf(t_plus) - erf(t_minus)),
+                    -gamma , b = q**-0.5 * (erf(t_plus) - erf(t_minus)),
                     axis=-1,
                 )
             )
