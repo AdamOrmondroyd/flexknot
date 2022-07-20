@@ -6,8 +6,9 @@ import numpy as np
 from scipy.special import erf, logsumexp
 from linf.helper_functions import (
     get_x_nodes_from_theta,
+    get_theta_n,
 )
-from linf.linfs import AdaptiveLinf, Linf, get_theta_n
+from linf.linfs import AdaptiveLinf, Linf
 
 
 class LinfLikelihood:
@@ -22,7 +23,7 @@ class LinfLikelihood:
     Returns likelihood(theta) -> log(L), [] where [] is the (lack of) derived parameters.
     """
 
-    def __init__(self, x_min, x_max, xs, ys, sigma, adaptive=True):
+    def __init__(self, x_min, x_max, xs, ys, sigma, adaptive):
         self._likelihood_function = create_likelihood_function(
             x_min, x_max, xs, ys, sigma, adaptive
         )
@@ -36,18 +37,18 @@ class LinfLikelihood:
 
         theta = [N, y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
 
-        Otherwise, theta is the same but without n.
+        Otherwise, theta is the same but without N.
 
         theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)].
         """
         return self._likelihood_function(theta)
 
 
-def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
+def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
     """
     Creates a likelihood function for a linf, relative to data descrived by xs, ys, and sigma.
 
-    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs, sigma_ys]].
+    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]].
 
     (obviously the middle two are degenerate when len(sigma) = 2, in which case
     [sigma_x, sigma_y] is assumed.)
@@ -68,13 +69,13 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
             has_sigma_x = True
 
     if has_sigma_x:
-        # sigma balls
         sigma_x = sigma[0]
         sigma_y = sigma[1]
         var_x = sigma_x**2
         var_y = sigma_y**2
 
         def xy_errors_likelihood(theta):
+
             x_nodes = np.concatenate(
                 ([x_min], get_x_nodes_from_theta(theta, adaptive), [x_max])
             )
@@ -88,7 +89,7 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
             # indices in order [data point, relevant m and c]
             q = (np.outer(var_x, ms**2).T + var_y).T
             delta = np.subtract.outer(ys, cs)
-            beta = (xs * var_y + (delta * ms).T * var_y).T / q
+            beta = (xs * var_y + (delta * ms).T * var_x).T / q
             gamma = (np.outer(xs, ms) - delta) ** 2 / 2 / q
 
             t_minus = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T * (x_nodes[:-1] - beta)
@@ -97,7 +98,8 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive=True):
             logL = -len(xs) * LOG_2_SQRT_2πλ
             logL += np.sum(
                 logsumexp(
-                    -gamma + np.log(q**-0.5 * (erf(t_plus) - erf(t_minus))),
+                    -gamma,
+                    b=q**-0.5 * (erf(t_plus) - erf(t_minus)),
                     axis=-1,
                 )
             )
