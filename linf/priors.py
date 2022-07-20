@@ -49,7 +49,7 @@ class AdaptiveLinfPrior(LinfPrior):
     """
 
     def __init__(self, x_min, x_max, y_min, y_max, N_min, N_max):
-        self._N_prior = UniformPrior(N_min, N_max)
+        self._N_prior = UniformPrior(N_min, N_max+1)
         super().__init__(x_min, x_max, y_min, y_max)
 
         # redefine self._x_prior
