@@ -49,13 +49,13 @@ class AdaptiveLinfPrior(LinfPrior):
     """
 
     def __init__(self, x_min, x_max, y_min, y_max, N_min, N_max):
-        self._N_prior = UniformPrior(N_min, N_max)
+        self._N_prior = UniformPrior(N_min, N_max + 1)
         super().__init__(x_min, x_max, y_min, y_max)
 
         # redefine self._x_prior
         self.__used_x_prior = self._x_prior
         self.__unused_x_prior = UniformPrior(x_min, x_max)
-        self.__n_x_nodes = N_max
+        self.__n_x_nodes = int(N_max)
         self._x_prior = (
             lambda hypercube_x: np.concatenate(
                 (
