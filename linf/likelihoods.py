@@ -106,15 +106,6 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
 
             return logL, []
 
-        # if adaptive:
-
-        #     def super_likelihood(theta):
-
-        #         theta_n = get_theta_n(theta)
-        #         return xy_errors_likelihood(theta_n)
-
-        #     return super_likelihood
-
         return xy_errors_likelihood
 
     # sigma_y only
