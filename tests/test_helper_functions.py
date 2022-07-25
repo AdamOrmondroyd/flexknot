@@ -48,11 +48,11 @@ def test_get_x_nodes_from_theta():
     """
     Test that get_x_nodes_from_theta() extracts the x_nodes correcly.
     """
-    assert np.all(x_nodes == get_x_nodes_from_theta(theta))
+    assert np.all(x_nodes == get_x_nodes_from_theta(theta, adaptive=False))
 
 
 def test_get_y_nodes_from_theta():
     """
     Test that get_y_nodes_from_theta() extracts the y_nodes correctly.
     """
-    assert np.all(y_nodes == get_y_nodes_from_theta(theta))
+    assert np.all(y_nodes == get_y_nodes_from_theta(theta, adaptive=False))
