@@ -1,14 +1,14 @@
 """
-Priors using linfs.
+Priors using flex-knots.
 
 I need to think carefully how best to abstract away all the weird slicing that
-goes on to make a linf work.
+goes on to make a flex-knots work.
 
 Currently going for interleaving x_nodes and y_nodes.
 """
 import numpy as np
 from pypolychord.priors import UniformPrior, SortedUniformPrior
-from linf.helper_functions import (
+from flexknot.helper_functions import (
     create_theta,
     get_theta_n,
     get_x_nodes_from_theta,
@@ -16,9 +16,9 @@ from linf.helper_functions import (
 )
 
 
-class LinfPrior(UniformPrior):
+class FlexKnotPrior(UniformPrior):
     """
-    Interleaved uniform and sorted uniform priors appropriate for a linf.
+    Interleaved uniform and sorted uniform priors appropriate for a flex-knot.
     """
 
     def __init__(self, x_min, x_max, y_min, y_max):
@@ -27,7 +27,7 @@ class LinfPrior(UniformPrior):
 
     def __call__(self, hypercube):
         """
-        Prior for linf.
+        Prior for flex-knot.
 
         hypercube = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
         """
@@ -41,11 +41,11 @@ class LinfPrior(UniformPrior):
         )
 
 
-class AdaptiveLinfPrior(LinfPrior):
+class AdaptiveKnotPrior(FlexKnotPrior):
     """
-    Interleaved uniform and sorted uniform priors appropriate for a linf.
+    Interleaved uniform and sorted uniform priors appropriate for a flex-knot.
 
-    N_max: int is the maximum number of nodes to use with an interactive linf.
+    N_max: int is the maximum number of nodes to use with an interactive flex-knot.
     """
 
     def __init__(self, x_min, x_max, y_min, y_max, N_min, N_max):
@@ -69,7 +69,7 @@ class AdaptiveLinfPrior(LinfPrior):
 
     def __call__(self, hypercube):
         """
-        Prior for adaptive linf.
+        Prior for adaptive flex-knot.
 
         hypercube = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
         where Nmax is the greatest allowed value of floor(N).

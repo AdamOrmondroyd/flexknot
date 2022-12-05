@@ -1,12 +1,12 @@
 """
-# linf (Linear INterpolation Function)
+# Flex-Knot
 
-This repo contains linfs and associated likelihoods used in my toy_sine project, 
+This repo contains flex-knots and associated likelihoods used in my toy_sine project, 
 and likelihoods associated with them.
 
 If I get this right, I should be able to use this to investigate w(z) and so on.
 """
 
-from linf.linfs import AdaptiveLinf, Linf
-from linf.likelihoods import LinfLikelihood
-from linf.priors import AdaptiveLinfPrior, LinfPrior
+from flexknot.flexknots import AdaptiveKnot, FlexKnot
+from flexknot.likelihoods import FlexKnotLikelihood
+from flexknot.priors import AdaptiveKnotPrior, FlexKnotPrior
