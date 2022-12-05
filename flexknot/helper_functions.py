@@ -8,13 +8,13 @@ import numpy as np
 def validate_theta(theta, adaptive):
     """
     Check that theta contains an odd/even number of elements for an adaptive/
-    non-adaptive linf, and in the adaptive case that floor(theta[0])-2 isn't
+    non-adaptive flex-knot, and in the adaptive case that floor(theta[0])-2 isn't
     greater than the provided number of internal nodes.
     """
     if adaptive:
         if len(theta) % 2 != 1:
             raise ValueError(
-                "theta must contain an odd number of elements for an adaptive linf."
+                "theta must contain an odd number of elements for an adaptive flex-knot."
             )
         if np.floor(theta[0]) > (len(theta) + 1) / 2:
             raise ValueError("n = ceil(theta[0]) exceeds the number of internal nodes.")
@@ -22,7 +22,7 @@ def validate_theta(theta, adaptive):
     if not adaptive:
         if len(theta) > 1 and len(theta) % 2 != 0:
             raise ValueError(
-                "theta must contain an even number of elements for a non-adaptive linf."
+                "theta must contain an even number of elements for a non-adaptive flex-knot."
             )
 
 

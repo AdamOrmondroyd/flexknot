@@ -1,19 +1,19 @@
 """
-Likelihoods using linfs.
+Likelihoods using flex-knots.
 """
 
 import numpy as np
 from scipy.special import erf, logsumexp
-from linf.helper_functions import (
+from flexknot.helper_functions import (
     get_x_nodes_from_theta,
     get_theta_n,
 )
-from linf.linfs import AdaptiveLinf, Linf
+from flexknot.flexknots import AdaptiveKnot, FlexKnot
 
 
-class LinfLikelihood:
+class FlexKnotLikelihood:
     """
-    Likelihood for a linf, relative to data described by xs, ys, and sigma.
+    Likelihood for a flex-knot, relative to data described by xs, ys, and sigma.
 
     sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]].
 
@@ -30,7 +30,7 @@ class LinfLikelihood:
 
     def __call__(self, theta):
         """
-        Likelihood relative to a linf with parameters theta.
+        Likelihood relative to a flex-knot with parameters theta.
 
         If self.adaptive = True, the first element of theta is N; floor(N) is the number of
         nodes used to calculate the likelihood.
@@ -46,7 +46,7 @@ class LinfLikelihood:
 
 def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
     """
-    Creates a likelihood function for a linf, relative to data descrived by xs, ys, and sigma.
+    Creates a likelihood function for a flex-knot, relative to data descrived by xs, ys, and sigma.
 
     sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]].
 
@@ -56,9 +56,9 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
     LOG_2_SQRT_2πλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
 
     if adaptive:
-        linf = AdaptiveLinf(x_min, x_max)
+        flexknot = AdaptiveKnot(x_min, x_max)
     else:
-        linf = Linf(x_min, x_max)
+        flexknot = FlexKnot(x_min, x_max)
 
     # check for sigma_x
     has_sigma_x = False
@@ -79,8 +79,8 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
             x_nodes = np.concatenate(
                 ([x_min], get_x_nodes_from_theta(theta, adaptive), [x_max])
             )
-            # use linf to get y nodes, as this is simplest way of dealing with N=0 or 1
-            y_nodes = linf(x_nodes, theta)
+            # use flex-knots to get y nodes, as this is simplest way of dealing with N=0 or 1
+            y_nodes = flexknot(x_nodes, theta)
 
             ms = (y_nodes[1:] - y_nodes[:-1]) / (x_nodes[1:] - x_nodes[:-1])
             cs = y_nodes[:-1] - ms * x_nodes[:-1]
@@ -118,7 +118,7 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
         else:
             logL = -0.5 * len(ys) * np.log(2 * np.pi * var_y)
 
-        logL += np.sum(-((ys - linf(xs, theta)) ** 2) / 2 / var_y)
+        logL += np.sum(-((ys - flexknot(xs, theta)) ** 2) / 2 / var_y)
         return logL, []
 
     return y_errors_likelihood

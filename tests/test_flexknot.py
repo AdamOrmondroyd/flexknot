@@ -1,15 +1,15 @@
 """
-Test that linf returns the same results as np.interp, and that
-adaptive_linf() does the same as linf().
+Test that flexknot returns the same results as np.interp, and that
+AdaptiveKnot does the same as FlexKnot.
 """
 
 import numpy as np
-from linf import AdaptiveLinf, Linf
+from flexknot import AdaptiveKnot, FlexKnot
 
 
-def test_linf():
+def test_flexknot():
     """
-    Test that linf gives the same results as np.interp.
+    Test that flex-knot gives the same results as np.interp.
     """
     x_min = 0
     x_max = 1
@@ -24,13 +24,13 @@ def test_linf():
     xs = np.linspace(x_min, x_max, 100)
     assert np.all(
         np.interp(xs, np.concatenate(([x_min], x_nodes, [x_max])), y_nodes)
-        == Linf(x_min, x_max)(xs, theta)
+        == FlexKnot(x_min, x_max)(xs, theta)
     )
 
 
-def test_adaptive_linf():
+def test_adaptive_flexknot():
     """
-    Test that adaptive_linf returns the same results as linf with appropriate arguments.
+    Test that AdaptiveKnot returns the same results as FlexKnot with appropriate arguments.
     """
     x_min = 0
     x_max = 6
@@ -38,13 +38,13 @@ def test_adaptive_linf():
     theta_n = np.array([0, 1, 1, 2, 2, 3, 3, 6])
     xs = np.linspace(x_min, x_max, 100)
     assert np.all(
-        Linf(x_min, x_max)(xs, theta_n) == AdaptiveLinf(x_min, x_max)(xs, theta)
+        FlexKnot(x_min, x_max)(xs, theta_n) == AdaptiveKnot(x_min, x_max)(xs, theta)
     )
 
 
 def test_adaptive_flat():
     """
-    Test that adaptive_linf returns array of theta[-1] when floor(N) = 1.
+    Test that AdaptiveKnot returns array of theta[-1] when floor(N) = 1.
     """
     rng = np.random.default_rng()
     x_min = 0
@@ -56,13 +56,13 @@ def test_adaptive_flat():
     theta[0] = rng.random() + 1
     assert np.all(
         np.full(100, theta[-1])
-        == AdaptiveLinf(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
+        == AdaptiveKnot(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
     )
 
 
 def test_adaptive_minus_1():
     """
-    Test that adaptive_linf returns array of -1 when floor(N) = 0.
+    Test that AdaptiveKnot returns array of -1 when floor(N) = 0.
     """
     rng = np.random.default_rng()
     x_min = 0
@@ -74,5 +74,5 @@ def test_adaptive_minus_1():
     theta[0] = rng.random()
     assert np.all(
         np.full(100, -1)
-        == AdaptiveLinf(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
+        == AdaptiveKnot(x_min, x_max)(np.linspace(x_min, x_max, 100), theta)
     )

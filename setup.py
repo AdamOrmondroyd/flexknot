@@ -4,15 +4,15 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setuptools.setup(
-    name="linf",
-    version="0.6.0",
+    name="flexknot",
+    version="1.0.0",
     author="Adam Neil Ormondroyd",
     author_email="adam.ormondroyd@gmail.com",
-    description="Linear INterpolation Functions",
+    description="Flex-Knot",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Ormorod/linf",
-    packages=["linf"],
+    url="https://github.com/Ormorod/flexknot",
+    packages=["flexknot"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Licence :: TODO",

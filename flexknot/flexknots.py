@@ -9,22 +9,22 @@ The reason for the interleaving of x and y is it avoids the need to know n.
 """
 import numpy as np
 
-from linf.helper_functions import (
+from flexknot.helper_functions import (
     get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
 )
 
 
-class Linf:
+class FlexKnot:
     """
-    linf with end nodes at x_min and x_max.
+    Flex-knot with end nodes at x_min and x_max.
 
     x_min: float
     x_max: float > x_min
 
     Returns:
-    linf(x, theta)
+    flexknot(x, theta)
 
     theta in format [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
     """
@@ -35,14 +35,14 @@ class Linf:
 
     def __call__(self, x, theta):
         """
-        linf with end nodes at x_min and x_max
+        Flex-knot with end nodes at x_min and x_max
 
         theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
 
         y0 and y_(N-1) are the y values corresponding to x_min and x_max respecively.
 
-        If theta only contains a single element, the linf is constant at that value.
-        If theta is empty, the linf if comstant at -1 (cosmology!)
+        If theta only contains a single element, the flex-knot is constant at that value.
+        If theta is empty, the flex-knot if comstant at -1 (cosmology!)
         """
         if 0 == len(theta):
             return np.full_like(x, -1)
@@ -61,15 +61,15 @@ class Linf:
         )
 
 
-class AdaptiveLinf(Linf):
+class AdaptiveKnot(FlexKnot):
     """
-    Adaptive linf which allows the number of parameters being used to vary.
+    Adaptive flex-knot which allows the number of parameters being used to vary.
 
     x_min: float
     x_max: float > x_min
 
     Returns:
-    adaptive_linf(x, theta)
+    adaptive_flexknot(x, theta)
 
     The first element of theta is N; floor(N)-2 is number of interior nodes used in
     the linear interpolation model.
@@ -77,20 +77,20 @@ class AdaptiveLinf(Linf):
     theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
     where Nmax is the greatest allowed value of floor(N).
 
-    if floor(N) = 1, the linf is constant at theta[-1] = y_(Nmax-1).
-    if floor(N) = 0, the linf is constant at -1 (cosmology!)
+    if floor(N) = 1, the flex-knot is constant at theta[-1] = y_(Nmax-1).
+    if floor(N) = 0, the flex-knot is constant at -1 (cosmology!)
     """
 
     def __call__(self, x, theta):
         """
         The first element of theta is N; floor(N)-2 is number of interior nodes used in
         the linear interpolation model. This is then used to select the
-        appropriate other elements of params to pass to linf()
+        appropriate other elements of params to pass to flexknot()
 
         theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
         where Nmax is the greatest allowed value of floor(N).
 
-        if floor(N) = 1, the linf is constant at theta[-1] = y_(Nmax-1).
-        if floor(N) = 0, the linf is constant at -1 (cosmology!)
+        if floor(N) = 1, the flex-knot is constant at theta[-1] = y_(Nmax-1).
+        if floor(N) = 0, the flex-knot is constant at -1 (cosmology!)
         """
         return super().__call__(x, get_theta_n(theta))
