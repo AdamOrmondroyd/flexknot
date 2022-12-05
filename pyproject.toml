@@ -1,0 +1,14 @@
+[project]
+name = "flexknot"
+version = "1.1.0"
+description = "Flex-Knot"
+authors = [{name="Adam Neil Ormondroyd", email="Adam.Ormondroyd@gmail.com"}]
+readme = "README.md"
+dependencies = ["numpy", "scipy", "pypolychord"]
+
+[project.urls]
+repository = "https://github.com/Ormorod/flexknot"
+
+[project.optional-dependencies]
+dev = ["black"]
+ 
