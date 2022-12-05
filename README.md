@@ -6,4 +6,4 @@ If I get this right, I should be able to use this to investigate $w(z)$ and so o
 
 To pip install:
 
-    pip install git+https://github.com/Ormorod/flexknot@main
+    pip install git+ssh://github.com/Ormorod/flexknot@main
