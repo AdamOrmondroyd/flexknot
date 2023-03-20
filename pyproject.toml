@@ -1,6 +1,6 @@
 [project]
 name = "flexknot"
-version = "1.1.0"
+version = "1.2.0"
 description = "Flex-Knot"
 authors = [{name="Adam Neil Ormondroyd", email="Adam.Ormondroyd@gmail.com"}]
 readme = "README.md"

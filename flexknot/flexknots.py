@@ -8,6 +8,7 @@ where n is the greatest allowed value of ceil(n).
 The reason for the interleaving of x and y is it avoids the need to know n.
 """
 import numpy as np
+from scipy.integrate import quad
 
 from flexknot.helper_functions import (
     get_theta_n,
@@ -42,7 +43,7 @@ class FlexKnot:
         y0 and y_(N-1) are the y values corresponding to x_min and x_max respecively.
 
         If theta only contains a single element, the flex-knot is constant at that value.
-        If theta is empty, the flex-knot if comstant at -1 (cosmology!)
+        If theta is empty, the flex-knot if constant at -1 (cosmology!)
         """
         if 0 == len(theta):
             return np.full_like(x, -1)
@@ -59,6 +60,14 @@ class FlexKnot:
             ),
             get_y_nodes_from_theta(theta, adaptive=False),
         )
+
+    def area(self, theta0, theta1):
+        """
+        Calculate the area between the flex-knot with parameters
+        theta_0 and theta_1.
+        """
+        return quad(lambda x: np.abs(self(x, theta0)-self(x, theta1)),
+                self.x_min, self.x_max)[0] / (self.x_max - self.x_min)
 
 
 class AdaptiveKnot(FlexKnot):
