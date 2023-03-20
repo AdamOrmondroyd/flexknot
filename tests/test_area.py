@@ -1,5 +1,5 @@
 import numpy as np
-from flexknot import FlexKnot
+from flexknot import FlexKnot, AdaptiveKnot
 
 
 def test_area():
@@ -22,3 +22,11 @@ def test_area():
     theta0 = np.random.rand(10)
     theta1 = np.random.rand(10)
     assert fk.area(theta0, theta1) == fk.area(theta1, theta0)
+
+    # Test adaptive
+    ak = AdaptiveKnot(x_min, x_max)
+    theta0 = np.random.rand(11)
+    theta1 = np.random.rand(11)
+    theta0[0] = 3
+    theta1[0] = 3
+    assert ak.area(theta0, theta1) == fk.area(theta1, theta0)

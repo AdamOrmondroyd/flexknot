@@ -103,3 +103,7 @@ class AdaptiveKnot(FlexKnot):
         if floor(N) = 0, the flex-knot is constant at -1 (cosmology!)
         """
         return super().__call__(x, get_theta_n(theta))
+
+    def area(self, theta0, theta1):
+        return quad(lambda x: np.abs(self(x, theta0)-self(x, theta1)),
+                self.x_min, self.x_max)[0] / (self.x_max - self.x_min)
