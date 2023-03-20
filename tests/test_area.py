@@ -1,5 +1,6 @@
 import numpy as np
 from flexknot import FlexKnot, AdaptiveKnot
+from flexknot.helper_functions import get_theta_n
 
 
 def test_area():
@@ -29,4 +30,6 @@ def test_area():
     theta1 = np.random.rand(11)
     theta0[0] = 3
     theta1[0] = 3
-    assert ak.area(theta0, theta1) == fk.area(theta1, theta0)
+    assert ak.area(theta0, theta1) == ak.area(theta1, theta0)
+    assert ak.area(theta0, theta1) == fk.area(get_theta_n(theta0),
+                                              get_theta_n(theta1))
