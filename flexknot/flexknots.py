@@ -96,13 +96,9 @@ class FlexKnot:
         Calculate the area between the flex-knot with parameters
         theta_0 and theta_1.
         """
-        print(theta0)
         x = self.intersections(theta0, theta1)
-        print(theta0)
         if x.size > 0:
-            print(f"x: {x}")
-            print(self(x, theta0) - self(x, theta1))
-            # assert np.all(np.isclose(self(x, theta0), self(x, theta1)))
+            assert np.all(np.isclose(self(x, theta0), self(x, theta1)))
 
         x = np.concatenate((x, [self.x_min, self.x_max],
                             get_x_nodes_from_theta(theta0, adaptive=False),
@@ -154,13 +150,9 @@ class AdaptiveKnot(FlexKnot):
         Calculate the area between the flex-knot with parameters
         theta_0 and theta_1.
         """
-        print(theta0)
         x = self.intersections(theta0, theta1)
-        print(theta0)
         if x.size > 0:
-            print(f"x: {x}")
-            print(self(x, theta0) - self(x, theta1))
-            # assert np.all(np.isclose(self(x, theta0), self(x, theta1)))
+            assert np.all(np.isclose(self(x, theta0), self(x, theta1)))
 
         x = np.concatenate((x, [self.x_min, self.x_max],
                             get_x_nodes_from_theta(theta0, adaptive=True),
