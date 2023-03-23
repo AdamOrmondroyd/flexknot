@@ -94,6 +94,10 @@ def get_y_nodes_from_theta(theta, adaptive):
 
 
 def intersection(p0, p1, q0, q1):
+    """
+    Finds intersection between two straight lines.
+    p0 and p1 lie on one line, and q0 and q1 lie on the other.
+    """
     [a0, b0] = p0
     [a1, b1] = p1
     [c0, d0] = q0
