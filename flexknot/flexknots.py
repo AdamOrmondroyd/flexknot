@@ -8,9 +8,9 @@ where n is the greatest allowed value of ceil(n).
 The reason for the interleaving of x and y is it avoids the need to know n.
 """
 import numpy as np
-from scipy.integrate import quad
 
 from flexknot.helper_functions import (
+    intersection,
     get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
@@ -61,13 +61,55 @@ class FlexKnot:
             get_y_nodes_from_theta(theta, adaptive=False),
         )
 
+    def intersections(self, theta0, theta1):
+        """
+        Find the x-coordinates of intersections between
+        the flex-knot with parameters theta0 and theta1.
+        """
+        if len(theta0) == 0:
+            theta0 = np.array([-1, -1])
+        elif len(theta0) == 1:
+            theta0 = np.full(2, theta0[0])
+        if len(theta1) == 0:
+            theta1 = np.array([-1, -1])
+        elif len(theta1) == 1:
+            theta1 = np.full(2, theta1[0])
+        theta0 = np.concatenate(([self.x_min], theta0[:-1],
+                                 [self.x_max], theta0[[-1]]))
+        theta1 = np.concatenate(([self.x_min], theta1[:-1],
+                                 [self.x_max], theta1[[-1]]))
+        intersections = []
+        for ii in range(0, len(theta1) - 2, 2):
+            for i in range(0, len(theta0) - 2, 2):
+                x = intersection(theta0[i:i+2], theta0[i+2:i+4],
+                                 theta1[ii:ii+2], theta1[ii+2:ii+4])[0]
+                if (theta0[i] < x < theta0[i+2] and
+                   theta1[ii] < x < theta1[ii+2]):
+                    intersections.append(x)
+        intersections = np.array(intersections)
+        if intersections.size > 0:
+            intersections = np.sort(intersections)
+        return intersections
+
     def area(self, theta0, theta1):
         """
         Calculate the area between the flex-knot with parameters
         theta_0 and theta_1.
         """
-        return quad(lambda x: np.abs(self(x, theta0)-self(x, theta1)),
-                self.x_min, self.x_max)[0] / (self.x_max - self.x_min)
+        print(theta0)
+        x = self.intersections(theta0, theta1)
+        print(theta0)
+        if x.size > 0:
+            print(f"x: {x}")
+            print(self(x, theta0) - self(x, theta1))
+            # assert np.all(np.isclose(self(x, theta0), self(x, theta1)))
+
+        x = np.concatenate((x, [self.x_min, self.x_max],
+                            get_x_nodes_from_theta(theta0, adaptive=False),
+                            get_x_nodes_from_theta(theta1, adaptive=False)))
+        x = np.sort(x)
+        y = np.abs(self(x, theta0) - self(x, theta1))
+        return np.trapz(y, x=x)
 
 
 class AdaptiveKnot(FlexKnot):
@@ -103,3 +145,26 @@ class AdaptiveKnot(FlexKnot):
         if floor(N) = 0, the flex-knot is constant at -1 (cosmology!)
         """
         return super().__call__(x, get_theta_n(theta))
+
+    def intersections(self, theta0, theta1):
+        return super().intersections(get_theta_n(theta0), get_theta_n(theta1))
+
+    def area(self, theta0, theta1):
+        """
+        Calculate the area between the flex-knot with parameters
+        theta_0 and theta_1.
+        """
+        print(theta0)
+        x = self.intersections(theta0, theta1)
+        print(theta0)
+        if x.size > 0:
+            print(f"x: {x}")
+            print(self(x, theta0) - self(x, theta1))
+            # assert np.all(np.isclose(self(x, theta0), self(x, theta1)))
+
+        x = np.concatenate((x, [self.x_min, self.x_max],
+                            get_x_nodes_from_theta(theta0, adaptive=True),
+                            get_x_nodes_from_theta(theta1, adaptive=True)))
+        x = np.sort(x)
+        y = np.abs(self(x, theta0) - self(x, theta1))
+        return np.trapz(y, x=x)
