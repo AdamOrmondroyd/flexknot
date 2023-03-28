@@ -86,6 +86,7 @@ class FlexKnot:
                 if (theta0[i] < x < theta0[i+2] and
                    theta1[ii] < x < theta1[ii+2]):
                     intersections.append(x)
+
         intersections = np.array(intersections)
         if intersections.size > 0:
             intersections = np.sort(intersections)
