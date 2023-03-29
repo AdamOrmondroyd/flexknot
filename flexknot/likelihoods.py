@@ -8,7 +8,7 @@ from flexknot.helper_functions import (
     get_x_nodes_from_theta,
     get_theta_n,
 )
-from flexknot.flexknots import AdaptiveKnot, FlexKnot
+from flexknot.core import AdaptiveKnot, FlexKnot
 
 
 class FlexKnotLikelihood:
