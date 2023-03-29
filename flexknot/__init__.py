@@ -7,6 +7,6 @@ toy_sine project, and likelihoods associated with them.
 If I get this right, I should be able to use this to investigate w(z).
 """
 
-from flexknot.flexknots import AdaptiveKnot, FlexKnot
+from flexknot.core import AdaptiveKnot, FlexKnot
 from flexknot.likelihoods import FlexKnotLikelihood
 from flexknot.priors import AdaptiveKnotPrior, FlexKnotPrior
