@@ -91,3 +91,22 @@ def get_y_nodes_from_theta(theta, adaptive):
         theta = get_theta_n(theta)
     n = len(theta) // 2 - 1
     return np.concatenate((theta[0 : 2 * n + 2 : 2], theta[-1:]))
+
+
+def intersection(p0, p1, q0, q1):
+    """
+    Finds intersection between two straight lines.
+    p0 and p1 lie on one line, and q0 and q1 lie on the other.
+    """
+    [a0, b0] = p0
+    [a1, b1] = p1
+    [c0, d0] = q0
+    [c1, d1] = q1
+    ma = (b1-b0)/(a1-a0)
+    mc = (d1-d0)/(c1-c0)
+    if ma == mc:
+        return np.array([np.nan, np.nan])
+    x = (d0 - b0 + a0 * ma - c0 * mc) / (ma - mc)
+    y = ma * (x - a0) + b0
+    assert np.isclose(y, mc * (x-c0) + d0)
+    return np.array([x, y])
