@@ -1,7 +1,6 @@
 import numpy as np
 from flexknot import FlexKnot, AdaptiveKnot
 from flexknot.helper_functions import get_theta_n, intersection
-from matplotlib import pyplot as plt
 
 
 def test_area():
@@ -33,12 +32,6 @@ def test_area():
                       fk.area(theta1, theta0))
 
     # compare old and new with this example
-    xs = np.linspace(fk.x_min, fk.x_max, 200)
-    fig, ax = plt.subplots()
-    ax.plot(xs, fk(xs, theta0))
-    ax.plot(xs, fk(xs, theta1))
-    ax.vlines(fk.intersections(theta0, theta1), -1, 1)
-    plt.show()
     assert np.all(np.isclose(fk.intersections(theta0, theta1),
                              [1+1/3, 2+2/5, 3+3/7, 4+4/9]))
     assert np.isclose(fk.area(theta0, theta1),
@@ -61,7 +54,6 @@ def test_intersection():
     p1 = np.array([1, 1])
     q0 = np.array([0, 1])
     q1 = np.array([1, 0])
-    fig, ax = plt.subplots()
 
     assert np.all(intersection(p0, p1, q0, q1) == np.array([0.5, 0.5]))
 
