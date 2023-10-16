@@ -8,9 +8,8 @@ Currently going for interleaving x_nodes and y_nodes.
 """
 import numpy as np
 from pypolychord.priors import UniformPrior, SortedUniformPrior
-from flexknot.helper_functions import (
+from flexknot.utils import (
     create_theta,
-    get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,
 )
@@ -29,10 +28,12 @@ class FlexKnotPrior(UniformPrior):
         """
         Prior for flex-knot.
 
-        hypercube = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
+        hypercube = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)]
+        for N nodes.
         """
         if len(hypercube) > 2:
-            _x_prior = self._x_prior(get_x_nodes_from_theta(hypercube, adaptive=False))
+            _x_prior = self._x_prior(get_x_nodes_from_theta(hypercube,
+                                                            adaptive=False))
         else:
             _x_prior = np.array([])
         return create_theta(
@@ -45,7 +46,8 @@ class AdaptiveKnotPrior(FlexKnotPrior):
     """
     Interleaved uniform and sorted uniform priors appropriate for a flex-knot.
 
-    N_max: int is the maximum number of nodes to use with an interactive flex-knot.
+    N_max: int is the maximum number of
+    nodes to use with an adaptive flex-knot.
     """
 
     def __init__(self, x_min, x_max, y_min, y_max, N_min, N_max):
@@ -60,7 +62,7 @@ class AdaptiveKnotPrior(FlexKnotPrior):
             lambda hypercube_x: np.concatenate(
                 (
                     self.__used_x_prior(hypercube_x[: self.__n_x_nodes]),
-                    self.__unused_x_prior(hypercube_x[self.__n_x_nodes :]),
+                    self.__unused_x_prior(hypercube_x[self.__n_x_nodes:]),
                 )
             )
             if self.__n_x_nodes > 0
@@ -71,7 +73,8 @@ class AdaptiveKnotPrior(FlexKnotPrior):
         """
         Prior for adaptive flex-knot.
 
-        hypercube = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
+        hypercube = [N, y0, x1, y1, x2, y2, ...,
+                     x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
         where Nmax is the greatest allowed value of floor(N).
         """
         prior = np.empty(hypercube.shape)

@@ -4,7 +4,7 @@ Test that FlexKnotPrior sorts the x nodes.
 
 import numpy as np
 from flexknot import AdaptiveKnotPrior, FlexKnotPrior
-from flexknot.helper_functions import get_x_nodes_from_theta
+from flexknot.utils import get_x_nodes_from_theta
 
 rng = np.random.default_rng()
 x_min = 0

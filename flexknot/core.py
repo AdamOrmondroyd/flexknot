@@ -10,7 +10,7 @@ The reason for the interleaving of x and y is it avoids the need to know n.
 import numpy as np
 from scipy.integrate import quad
 
-from flexknot.helper_functions import (
+from flexknot.utils import (
     get_theta_n,
     get_x_nodes_from_theta,
     get_y_nodes_from_theta,

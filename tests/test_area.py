@@ -1,6 +1,6 @@
 import numpy as np
 from flexknot import FlexKnot, AdaptiveKnot
-from flexknot.helper_functions import get_theta_n
+from flexknot.utils import get_theta_n
 
 
 def test_area():

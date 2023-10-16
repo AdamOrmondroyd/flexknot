@@ -4,7 +4,7 @@ Likelihoods using flex-knots.
 
 import numpy as np
 from scipy.special import erf, logsumexp
-from flexknot.helper_functions import (
+from flexknot.utils import (
     get_x_nodes_from_theta,
     get_theta_n,
 )

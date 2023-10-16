@@ -4,7 +4,7 @@ Test get_likelihood in two trivial cases simple enough to work out by hand.
 import numpy as np
 from scipy.special import erf
 from flexknot import FlexKnotLikelihood
-from flexknot.helper_functions import create_theta
+from flexknot.utils import create_theta
 
 
 def test_likelihood():

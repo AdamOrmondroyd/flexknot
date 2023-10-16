@@ -1,9 +1,9 @@
 """
-Test each of the functions from helper_functions.py
+Test each of the functions from utils.py
 """
 
 import numpy as np
-from flexknot.helper_functions import (
+from flexknot.utils import (
     create_theta,
     get_theta_n,
     get_x_nodes_from_theta,
