@@ -31,6 +31,7 @@ def test_adaptiveknotprior_x_nodes_are_sorted():
     """
 
     hypercube = rng.random(2 * N_max - 1)
-    prior = AdaptiveKnotPrior(x_min, x_max, y_min, y_max, N_min, N_max)(hypercube)
+    prior = AdaptiveKnotPrior(x_min, x_max, y_min, y_max,
+                              N_min, N_max)(hypercube)
 
     assert np.all(np.diff(get_x_nodes_from_theta(prior, adaptive=True)) >= 0)

@@ -1,7 +1,7 @@
 """
 Linear INterpolation Functions.
 
-theta refers to the full set of parameters for an adaptive linear interpolation model,
+theta refers to the full set of parameters for an adaptive flex-knot,
 [n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1],
 where n is the greatest allowed value of ceil(n).
 
@@ -27,7 +27,8 @@ class FlexKnot:
     Returns:
     flexknot(x, theta)
 
-    theta in format [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
+    theta in format [y0, x1, y1, x2, y2, ...,
+                     x_(N-2), y_(N-2), y_(N-1)] for N nodes.
     """
 
     def __init__(self, x_min, x_max):
@@ -38,11 +39,13 @@ class FlexKnot:
         """
         Flex-knot with end nodes at x_min and x_max
 
-        theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
+        theta = [y0, x1, y1, x2, y2, ...,
+                 x_(N-2), y_(N-2), y_(N-1)] for N nodes.
 
-        y0 and y_(N-1) are the y values corresponding to x_min and x_max respecively.
+        y0 and y_(N-1) are the y values corresponding
+        to x_min and x_max respecively.
 
-        If theta only contains a single element, the flex-knot is constant at that value.
+        If theta only contains a single element, the flex-knot is constant.
         If theta is empty, the flex-knot if constant at -1 (cosmology!)
         """
         if 0 == len(theta):
@@ -67,12 +70,12 @@ class FlexKnot:
         theta_0 and theta_1.
         """
         return quad(lambda x: np.abs(self(x, theta0)-self(x, theta1)),
-                self.x_min, self.x_max)[0] / (self.x_max - self.x_min)
+                    self.x_min, self.x_max)[0] / (self.x_max - self.x_min)
 
 
 class AdaptiveKnot(FlexKnot):
     """
-    Adaptive flex-knot which allows the number of parameters being used to vary.
+    Adaptive flex-knot which allows the number of parameters to vary.
 
     x_min: float
     x_max: float > x_min
@@ -80,8 +83,8 @@ class AdaptiveKnot(FlexKnot):
     Returns:
     adaptive_flexknot(x, theta)
 
-    The first element of theta is N; floor(N)-2 is number of interior nodes used in
-    the linear interpolation model.
+    The first element of theta is N; floor(N)-2 is number of interior nodes
+    used in the flex-knot.
 
     theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
     where Nmax is the greatest allowed value of floor(N).
@@ -92,11 +95,12 @@ class AdaptiveKnot(FlexKnot):
 
     def __call__(self, x, theta):
         """
-        The first element of theta is N; floor(N)-2 is number of interior nodes used in
-        the linear interpolation model. This is then used to select the
+        The first element of theta is N; floor(N)-2 is number of
+        interior nodes used in the flex-knot. This is then used to select the
         appropriate other elements of params to pass to flexknot()
 
-        theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
+        theta = [N, y0, x1, y1, x2, y2, ...,
+                 x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
         where Nmax is the greatest allowed value of floor(N).
 
         if floor(N) = 1, the flex-knot is constant at theta[-1] = y_(Nmax-1).

@@ -18,8 +18,8 @@ def test_flexknot():
     x_nodes = np.sort(rng.uniform(x_min, x_max, n))
     y_nodes = rng.uniform(-10, 10, n + 2)
     theta = np.zeros(len(x_nodes) + len(y_nodes))
-    theta[1 : 2 * n + 1 : 2] = x_nodes
-    theta[0 : 2 * n + 2 : 2] = y_nodes[:-1]
+    theta[1: 2 * n + 1: 2] = x_nodes
+    theta[0: 2 * n + 2: 2] = y_nodes[:-1]
     theta[-1] = y_nodes[-1]
     xs = np.linspace(x_min, x_max, 100)
     assert np.all(
@@ -30,7 +30,7 @@ def test_flexknot():
 
 def test_adaptive_flexknot():
     """
-    Test that AdaptiveKnot returns the same results as FlexKnot with appropriate arguments.
+    Test that AdaptiveKnot returns the same results as FlexKnot.
     """
     x_min = 0
     x_max = 6
@@ -38,7 +38,8 @@ def test_adaptive_flexknot():
     theta_n = np.array([0, 1, 1, 2, 2, 3, 3, 6])
     xs = np.linspace(x_min, x_max, 100)
     assert np.all(
-        FlexKnot(x_min, x_max)(xs, theta_n) == AdaptiveKnot(x_min, x_max)(xs, theta)
+        FlexKnot(x_min, x_max)(xs, theta_n)
+        == AdaptiveKnot(x_min, x_max)(xs, theta)
     )
 
 
