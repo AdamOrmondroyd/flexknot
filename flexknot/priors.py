@@ -78,7 +78,7 @@ class AdaptiveKnotPrior(FlexKnotPrior):
         where Nmax is the greatest allowed value of floor(N).
         """
         prior = np.empty(hypercube.shape)
-        prior[0] = self._N_prior(hypercube[0:1])
+        prior[0] = self._N_prior(hypercube[0])
         self.__n_x_nodes = int(prior[0])
         prior[1:] = super().__call__(hypercube[1:])
         return prior
