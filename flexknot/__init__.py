@@ -1,5 +1,5 @@
 """
-# Flex-Knot
+# Flex-Knot.
 
 This repo contains flex-knots and associated likelihoods used in my
 toy_sine project, and likelihoods associated with them.

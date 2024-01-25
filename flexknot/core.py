@@ -1,12 +1,10 @@
 """
-Linear INterpolation Functions.
+Flex-knot.
 
-theta refers to the full set of parameters for an adaptive linear interpolation model,
-[n, y0, x1, y1, x2, y2, ..., x_n, y_n, y_n+1],
-where n is the greatest allowed value of ceil(n).
-
-The reason for the interleaving of x and y is it avoids the need to know n.
+x and y are interleaved so that N does not need to be provided for
+a non-adaptive flex-knot.
 """
+
 import numpy as np
 from scipy.integrate import quad
 
@@ -24,10 +22,14 @@ class FlexKnot:
     x_min: float
     x_max: float > x_min
 
-    Returns:
-    flexknot(x, theta)
+    Returns
+    -------
+    flexknot(x, theta): callable
 
-    theta in format [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
+    theta has format
+    [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)]
+    for N nodes.
+
     """
 
     def __init__(self, x_min, x_max):
@@ -36,14 +38,26 @@ class FlexKnot:
 
     def __call__(self, x, theta):
         """
-        Flex-knot with end nodes at x_min and x_max
+        Flex-knot with end nodes at x_min and x_max.
 
-        theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
+        For N nodes:
+        theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)].
 
-        y0 and y_(N-1) are the y values corresponding to x_min and x_max respecively.
+        y0 and y_(N-1) are the y values at x_min and x_max respecively.
 
-        If theta only contains a single element, the flex-knot is constant at that value.
-        If theta is empty, the flex-knot if constant at -1 (cosmology!)
+        If theta only contains a single element, the flex-knot is constant.
+        If theta is empty, the flex-knot is constant at -1 (cosmology!)
+
+        Parameters
+        ----------
+        x : float or array-like
+
+        theta : array-like
+
+        Returns
+        -------
+        float or array-like
+
         """
         if 0 == len(theta):
             return np.full_like(x, -1)
@@ -63,25 +77,31 @@ class FlexKnot:
 
     def area(self, theta0, theta1):
         """
-        Calculate the area between the flex-knot with parameters
-        theta_0 and theta_1.
+        Area between two flex-knots.
+
+        Parameters
+        ----------
+        theta0 : array-like
+
+        theta1 : array-like
         """
         return quad(lambda x: np.abs(self(x, theta0)-self(x, theta1)),
-                self.x_min, self.x_max)[0] / (self.x_max - self.x_min)
+                    self.x_min, self.x_max)[0] / (self.x_max - self.x_min)
 
 
 class AdaptiveKnot(FlexKnot):
     """
-    Adaptive flex-knot which allows the number of parameters being used to vary.
+    Adaptive flex-knot which allows the number of knots to vary.
 
     x_min: float
     x_max: float > x_min
 
-    Returns:
-    adaptive_flexknot(x, theta)
+    Returns
+    -------
+    adaptive_flexknot(x, theta): callable
 
-    The first element of theta is N; floor(N)-2 is number of interior nodes used in
-    the linear interpolation model.
+    The first element of theta is N; floor(N)-2 is number of interior nodes
+    used by the flexknot.
 
     theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
     where Nmax is the greatest allowed value of floor(N).
@@ -92,14 +112,29 @@ class AdaptiveKnot(FlexKnot):
 
     def __call__(self, x, theta):
         """
-        The first element of theta is N; floor(N)-2 is number of interior nodes used in
-        the linear interpolation model. This is then used to select the
+        Adaptive flex-knot with end nodes at x_min and x_max.
+
+        The first element of theta is N; floor(N)-2 is number of interior nodes
+        used in the flexknot. This is then used to select the
         appropriate other elements of params to pass to flexknot()
 
-        theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
+        For a maximum of Nmax nodes:
+        theta = [N, y0, x1, y1, x2, y2, ...,
+                 x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
         where Nmax is the greatest allowed value of floor(N).
 
         if floor(N) = 1, the flex-knot is constant at theta[-1] = y_(Nmax-1).
         if floor(N) = 0, the flex-knot is constant at -1 (cosmology!)
+
+        Parameters
+        ----------
+        x : float or array-like
+
+        theta : array-like
+
+        Returns
+        -------
+        float or array-like
+
         """
         return super().__call__(x, get_theta_n(theta))
