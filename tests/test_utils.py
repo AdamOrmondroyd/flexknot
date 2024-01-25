@@ -1,6 +1,4 @@
-"""
-Test utils.py
-"""
+"""Test utils.py."""
 
 import numpy as np
 from flexknot.utils import (
