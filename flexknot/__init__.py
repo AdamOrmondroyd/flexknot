@@ -10,3 +10,9 @@ If I get this right, I should be able to use this to investigate w(z).
 from flexknot.core import AdaptiveKnot, FlexKnot
 from flexknot.likelihoods import FlexKnotLikelihood
 from flexknot.priors import AdaptiveKnotPrior, FlexKnotPrior
+
+__all__ = [
+    "AdaptiveKnot", "FlexKnot",
+    "FlexKnotLikelihood",
+    "AdaptiveKnotPrior", "FlexKnotPrior",
+]
