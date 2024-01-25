@@ -1,6 +1,4 @@
-"""
-Likelihoods using flex-knots.
-"""
+"""Likelihoods using flex-knots."""
 
 import numpy as np
 from scipy.special import erf, logsumexp
@@ -11,14 +9,16 @@ from flexknot.core import AdaptiveKnot, FlexKnot
 
 class FlexKnotLikelihood:
     """
-    Likelihood for a flex-knot, relative to data described by xs, ys, and sigma.
+    Likelihood for a flex-knot, with data described by xs, ys, and sigma.
 
-    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]].
+    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys],
+    or [[sigma_xs], [sigma_ys]].
 
-    (obviously the middle two are degenerate when len(sigma) = 2, in which case
+    (Obviously the middle two are degenerate when len(sigma) = 2, in which case
     [sigma_x, sigma_y] is assumed.)
 
-    Returns likelihood(theta) -> log(L), [] where [] is the (lack of) derived parameters.
+    Returns likelihood(theta) -> log(L), [] where [] is the (lack of)
+    derived parameters.
     """
 
     def __init__(self, x_min, x_max, xs, ys, sigma, adaptive):
@@ -28,28 +28,56 @@ class FlexKnotLikelihood:
 
     def __call__(self, theta):
         """
-        Likelihood relative to a flex-knot with parameters theta.
+        Likelihood of the data being described by flex-knot(theta).
 
-        If self.adaptive = True, the first element of theta is N; floor(N) is the number of
-        nodes used to calculate the likelihood.
+        If self.adaptive = True, the first element of theta is N; floor(N) is
+        the number of nodes in the flex-knot.
 
-        theta = [N, y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] for N nodes.
+        For N nodes,
+        theta = [N, y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)].
 
         Otherwise, theta is the same but without N.
 
         theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)].
+
+        Parameters
+        ----------
+        theta : array-like
+
+        Returns
+        -------
+        tuple(float, [])
+
         """
         return self._likelihood_function(theta)
 
 
 def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
     """
-    Creates a likelihood function for a flex-knot, relative to data descrived by xs, ys, and sigma.
+    Create a likelihood function for a flex-knot, for data xs, ys, sigma.
 
-    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys] or [[sigma_xs], [sigma_ys]].
+    sigma is either sigma_y, [sigma_x, sigma_y], [sigma_ys],
+    or [[sigma_xs], [sigma_ys]].
 
-    (obviously the middle two are degenerate when len(sigma) = 2, in which case
+    (Obviously the middle two are degenerate when len(sigma) = 2, in which case
     [sigma_x, sigma_y] is assumed.)
+
+    Returns likelihood(theta) -> log(L), [] where [] is the (lack of)
+    derived parameters.
+
+    Parameters
+    ----------
+    x_min : float
+    x_max : float > x_min
+    xs : array-like
+    ys : array-like
+    sigma : float or array-like
+    adaptive : bool
+
+    Returns
+    -------
+    likelihood(theta) -> log(L), []
+
     """
     LOG_2_SQRT_2πλ = np.log(2) + 0.5 * np.log(2 * np.pi * (x_max - x_min))
 
@@ -77,7 +105,9 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
             x_nodes = np.concatenate(
                 ([x_min], get_x_nodes_from_theta(theta, adaptive), [x_max])
             )
-            # use flex-knots to get y nodes, as this is simplest way of dealing with N=0 or 1
+            # use flex-knots to get y nodes, as this is
+            # the simplest way to deal with N=0 or 1
+
             y_nodes = flexknot(x_nodes, theta)
 
             ms = (y_nodes[1:] - y_nodes[:-1]) / (x_nodes[1:] - x_nodes[:-1])
@@ -90,8 +120,9 @@ def create_likelihood_function(x_min, x_max, xs, ys, sigma, adaptive):
             beta = (xs * var_y + (delta * ms).T * var_x).T / q
             gamma = (np.outer(xs, ms) - delta) ** 2 / 2 / q
 
-            t_minus = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T * (x_nodes[:-1] - beta)
-            t_plus = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T * (x_nodes[1:] - beta)
+            t = (np.sqrt(q / 2).T / (sigma_x * sigma_y)).T
+            t_minus = t * (x_nodes[:-1] - beta)
+            t_plus = t * (x_nodes[1:] - beta)
 
             logL = -len(xs) * LOG_2_SQRT_2πλ
             logL += np.sum(
