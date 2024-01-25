@@ -7,7 +7,7 @@ from flexknot.utils import get_x_nodes_from_theta
 from flexknot.core import AdaptiveKnot, FlexKnot
 
 
-class FlexKnotLikelihood:
+class Likelihood:
     """
     Likelihood for a flex-knot, with data described by xs, ys, and sigma.
 
