@@ -1,9 +1,9 @@
 """
-Test each of the functions from helper_functions.py
+Test utils.py
 """
 
 import numpy as np
-from flexknot.helper_functions import (
+from flexknot.utils import (
     create_theta,
     get_theta_n,
     get_x_nodes_from_theta,
@@ -17,7 +17,8 @@ theta = np.array([0, 0.25, 1, 0.75, -1, 2])
 
 def test_get_theta_n():
     """
-    Check that get_theta_n() extracts the correct elements from [3, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6].
+    Check that get_theta_n() extracts the correct elements from
+    [3, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6].
     """
 
     theta = np.array([5, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6])

@@ -4,7 +4,7 @@ Test that FlexKnotPrior sorts the x nodes.
 
 import numpy as np
 from flexknot import AdaptiveKnotPrior, FlexKnotPrior
-from flexknot.helper_functions import get_x_nodes_from_theta
+from flexknot.utils import get_x_nodes_from_theta
 
 rng = np.random.default_rng()
 x_min = 0
@@ -31,6 +31,8 @@ def test_adaptiveknotprior_x_nodes_are_sorted():
     """
 
     hypercube = rng.random(2 * N_max - 1)
-    prior = AdaptiveKnotPrior(x_min, x_max, y_min, y_max, N_min, N_max)(hypercube)
+    prior = AdaptiveKnotPrior(
+        x_min, x_max, y_min, y_max, N_min, N_max
+    )(hypercube)
 
     assert np.all(np.diff(get_x_nodes_from_theta(prior, adaptive=True)) >= 0)

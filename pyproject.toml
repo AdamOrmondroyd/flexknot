@@ -10,5 +10,5 @@ dependencies = ["numpy", "scipy", "pypolychord"]
 repository = "https://github.com/Ormorod/flexknot"
 
 [project.optional-dependencies]
-dev = ["black"]
+dev = ["pytest", "flake8", "pydocstyle"]
  
