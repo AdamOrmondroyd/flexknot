@@ -1,40 +1,54 @@
-"""
-Helpful functions for dealing with the interleaved arrangement of theta.
-"""
+"""Utilities for dealing with the interleaved arrangement of theta."""
 
 import numpy as np
 
 
 def validate_theta(theta, adaptive):
-    """
-    Check that theta contains an odd/even number of elements for an adaptive/
-    non-adaptive flex-knot, and in the adaptive case that floor(theta[0])-2 isn't
-    greater than the provided number of internal nodes.
+    """Check theta for mistakes.
+
+    theta must contain an odd/even number of elements for an adaptive/
+    non-adaptive flex-knot,
+
+    In the adaptive case, floor(theta[0])-2 must not be greater than the
+    provided number of internal nodes.
+
+    Parameters
+    ----------
+    theta : array-like
+
+    adaptive : bool
+
     """
     if adaptive:
         if len(theta) % 2 != 1:
             raise ValueError(
-                "theta must contain an odd number of elements for an adaptive flex-knot."
+                "theta must contain an odd number of elements "
+                "for an adaptive flex-knot."
             )
         if np.floor(theta[0]) > (len(theta) + 1) / 2:
-            raise ValueError("n = ceil(theta[0]) exceeds the number of internal nodes.")
+            raise ValueError("n = ceil(theta[0]) exceeds the "
+                             "number of internal nodes.")
 
     if not adaptive:
         if len(theta) > 1 and len(theta) % 2 != 0:
-            raise ValueError(
-                "theta must contain an even number of elements for a non-adaptive flex-knot."
-            )
+            raise ValueError("theta must contain an even number of elements "
+                             "for a non-adaptive flex-knot.")
 
 
 def get_theta_n(theta):
-    """
-    Extracts the first n parameters from
+    """Extract the first N parameters from theta.
 
-    theta = [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)]
-
+    Parameters
+    ----------
+    theta : array-like
+    [N, y0, x1, y1, x2, y2, ..., x_(Nmax-2), y_(Nmax-2), y_(Nmax-1)],
     where Nmax is the maximum value of floor(N).
 
-    returns theta_n = [y0, x1, y1, x2, y2, ..., x_floor(N)-2, y_floor(N)-2, y_(Nmax-1)]
+    Returns
+    -------
+    theta_n : array-like
+    [y0, x1, y1, x2, y2, ..., x_floor(N)-2, y_floor(N)-2, y_(Nmax-1)]
+
     """
     validate_theta(theta, adaptive=True)
 
@@ -44,7 +58,7 @@ def get_theta_n(theta):
         return np.array([])
     theta_n = np.concatenate(
         (
-            theta[1 : 2 * n + 2],  # y0 and internal x and y
+            theta[1:2*n+2],  # y0 and internal x and y
             theta[-1:],  # y end node
         )
     )
@@ -52,42 +66,78 @@ def get_theta_n(theta):
 
 
 def create_theta(x_nodes, y_nodes):
-    """
-    Takes x_nodes = [x1, ... x_(N-2)] and y_nodes = [y0, y1, ..., y_(N-2), y_(N-1)] to
-    return theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)], where
-    N is the number of nodes.
+    """Interleave x and y nodes to create theta.
+
+    Parameters
+    ----------
+    x_nodes : array-like
+    [x1, ... x_(N-2)]
+
+    y_nodes : array-like
+    [y0, y1, ..., y_(N-2), y_(N-1)]
+
+    Returns
+    -------
+    theta : array-like
+    [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)]
+
     """
     if len(y_nodes) == 1:
         return y_nodes
     if len(x_nodes) + 2 != len(y_nodes):
-        raise ValueError("y_nodes must have exactly two more elements than x_nodes")
+        raise ValueError("y_nodes must have exactly two "
+                         "more elements than x_nodes")
     n = len(x_nodes)
     theta = np.zeros(len(x_nodes) + len(y_nodes))
-    theta[1 : 2 * n + 1 : 2] = x_nodes
-    theta[0 : 2 * n + 2 : 2] = y_nodes[:-1]
+    theta[1:2*n+1:2] = x_nodes
+    theta[0:2*n+2:2] = y_nodes[:-1]
     theta[-1] = y_nodes[-1]
     return theta
 
 
 def get_x_nodes_from_theta(theta, adaptive):
-    """
-    Takes theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] to return
-    x_nodes = [x1, ... x_(N-2)], where N is the number of nodes.
+    """Get the x nodes from theta.
+
+    Parameters
+    ----------
+    theta : array-like
+    [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)]
+
+    adaptive : bool
+    Whether theta is for an adaptive or non-adaptive flex-knot.
+
+    Returns
+    -------
+    x_nodes : array-like
+    [x1, ... x_(N-2)]
+
     """
     validate_theta(theta, adaptive)
     if adaptive:
         theta = get_theta_n(theta)
     n = len(theta) // 2 - 1
-    return theta[1 : 2 * n + 1 : 2]
+    return theta[1:2*n+1:2]
 
 
 def get_y_nodes_from_theta(theta, adaptive):
-    """
-    Takes theta = [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)] to return
-    y_nodes = [y0, y1, ..., y_(N-2), y_(N-1)], where N is the number of nodes.
+    """Get the y nodes from theta.
+
+    Parameters
+    ----------
+    theta : array-like
+    [y0, x1, y1, x2, y2, ..., x_(N-2), y_(N-2), y_(N-1)]
+
+    adaptive : bool
+    Whether theta is for an adaptive or non-adaptive flex-knot.
+
+    Returns
+    -------
+    y_nodes : array-like
+    [y0, y1, ..., y_(N-2), y_(N-1)]
+
     """
     validate_theta(theta, adaptive)
     if adaptive:
         theta = get_theta_n(theta)
     n = len(theta) // 2 - 1
-    return np.concatenate((theta[0 : 2 * n + 2 : 2], theta[-1:]))
+    return np.concatenate((theta[0:2*n+2:2], theta[-1:]))
