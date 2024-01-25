@@ -8,7 +8,7 @@ Currently going for interleaving x_nodes and y_nodes.
 """
 import numpy as np
 from pypolychord.priors import UniformPrior, SortedUniformPrior
-from flexknot.helper_functions import (
+from flexknot.utils import (
     create_theta,
     get_theta_n,
     get_x_nodes_from_theta,
@@ -75,7 +75,7 @@ class AdaptiveKnotPrior(FlexKnotPrior):
         where Nmax is the greatest allowed value of floor(N).
         """
         prior = np.empty(hypercube.shape)
-        prior[0] = self._N_prior(hypercube[0:1])
+        prior[[0]] = self._N_prior(hypercube[0:1])
         self.__n_x_nodes = int(prior[0])
         prior[1:] = super().__call__(hypercube[1:])
         return prior
