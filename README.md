@@ -1,9 +1,23 @@
 # Flex-Knot
 
-This repo contains flex-knots and associated likelihoods used in my `toy_sine` project, and likelihoods associated with them.
+This repo contains flex-knots and associated likelihoods
 
-If I get this right, I should be able to use this to investigate $w(z)$ and so on.
+I initially created this for the `toy_sine` project, but it is also used for the
+primordial matter power spectrum $\mathcal P_\mathcal R(k)$, and the dark energy
+equation of state $w(a)$.
+
 
 To pip install:
 
-    pip install git+ssh://github.com/Ormorod/flexknot@main
+    pip install git+ssh://github.com/adamormondroyd/flexknot@main
+
+To install locally:
+    
+    gh repo clone adamormondroyd/flexknot # (or ssh or https)
+    cd flexknot
+    pip install -e .
+
+Or to get all test dependencies:
+
+    pip install -e '.[dev]'
+
