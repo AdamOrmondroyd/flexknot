@@ -65,7 +65,6 @@ class AdaptiveKnotPrior(FlexKnotPrior):
         # redefine self._x_prior
         self.__used_x_prior = self._x_prior
         self.__unused_x_prior = UniformPrior(x_min, x_max)
-        self.__n_x_nodes = int(N_max)
         self._x_prior = (
             lambda hypercube_x: np.concatenate(
                 (
