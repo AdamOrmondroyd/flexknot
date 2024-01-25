@@ -15,7 +15,7 @@ from flexknot.utils import (
 )
 
 
-class FlexKnotPrior(UniformPrior):
+class Prior(UniformPrior):
     """Interleaved uniform and sorted uniform priors for a flex-knot."""
 
     def __init__(self, x_min, x_max, y_min, y_max):
@@ -50,7 +50,7 @@ class FlexKnotPrior(UniformPrior):
         )
 
 
-class AdaptiveKnotPrior(FlexKnotPrior):
+class AdaptivePrior(Prior):
     """
     Interleaved uniform and sorted uniform priors appropriate for a flex-knot.
 

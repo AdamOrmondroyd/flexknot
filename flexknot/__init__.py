@@ -8,8 +8,8 @@ If I get this right, I should be able to use this to investigate w(z).
 """
 
 from flexknot.core import AdaptiveKnot, FlexKnot
-from flexknot.likelihoods import FlexKnotLikelihood
-from flexknot.priors import AdaptiveKnotPrior, FlexKnotPrior
+from flexknot.likelihoods import Likelihood
+from flexknot.priors import AdaptivePrior, Prior
 
 __all__ = [
     "AdaptiveKnot", "FlexKnot",
