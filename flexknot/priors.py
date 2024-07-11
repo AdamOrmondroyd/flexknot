@@ -7,6 +7,7 @@ goes on to make a flex-knots work.
 Currently going for interleaving x_nodes and y_nodes.
 """
 import numpy as np
+from scipy.special import factorial
 from pypolychord.priors import UniformPrior, SortedUniformPrior
 from flexknot.utils import (
     create_theta,
@@ -59,7 +60,8 @@ class AdaptivePrior(Prior):
     """
 
     def __init__(self, x_min, x_max, y_min, y_max, N_min, N_max):
-        self._N_prior = UniformPrior(N_min, N_max + 1)
+        # self._N_prior = UniformPrior(N_min, N_max + 1)
+        self._N_prior = FactorialPrior(N_min, N_max)
         super().__init__(x_min, x_max, y_min, y_max)
 
         # redefine self._x_prior
@@ -91,3 +93,20 @@ class AdaptivePrior(Prior):
         self.__n_x_nodes = int(prior[0])
         prior[1:] = super().__call__(hypercube[1:])
         return prior
+
+
+class FactorialPrior:
+
+    def __init__(self, N_min, N_max):
+        self.N_min = N_min
+        self.N_max = N_max
+        self.A = np.sum(factorial(np.arange(self.N_min, self.N_max+1)) ** -1) ** -1
+
+    def F(self, n):
+        return self.A * np.sum(factorial(np.arange(self.N_min, n+1)) ** -1)
+
+    def __call__(self, x):
+        n = self.N_min
+        while self.F(n) < x:
+            n += 1
+        return n
