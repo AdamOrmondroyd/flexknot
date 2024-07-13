@@ -1,6 +1,6 @@
 [project]
 name = "flexknot"
-version = "1.3.0"
+dynamic = ["version"]
 description = "Flex-Knot"
 authors = [{name="Adam Neil Ormondroyd", email="Adam.Ormondroyd@gmail.com"}]
 readme = "README.md"
@@ -11,3 +11,9 @@ repository = "https://github.com/adamormondroyd/flexknot"
 
 [project.optional-dependencies]
 dev = ["pytest", "flake8", "pydocstyle"]
+
+[build-system]
+requires = ["setuptools_scm>=8"]
+
+[tool.setuptools_scm]
+version_file = "flexknot/_version.py"

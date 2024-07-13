@@ -3,3 +3,4 @@ env*/
 *.ipynb
 *.egg-info
 build/
+flexknot/_version.py
