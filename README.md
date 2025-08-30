@@ -1,5 +1,7 @@
 # Flex-Knot
 
+![flexknot logo](logo.png)
+
 This repo contains flex-knots and associated likelihoods
 
 I initially created this for the `toy_sine` project, but it is also used for the
